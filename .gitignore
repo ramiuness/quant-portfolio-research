@@ -1,0 +1,204 @@
+# Model Validation Repository - .gitignore
+
+# ============================================================================
+# Private Documentation, Tests, and Source Code
+# ============================================================================
+# Keep directory structure visible, but exclude content
+**/docs/
+**/tests/
+**/*.jl
+!**/docs/.gitkeep
+!**/tests/.gitkeep
+!**/src/.gitkeep
+!**/src/README.md
+
+# Exclude specific helper scripts
+generate_api_docs.jl
+
+# Keep API documentation public
+!api/
+
+# ============================================================================
+# Large Output Files
+# ============================================================================
+# HTML reports (too large for Git, host separately)
+*.html
+
+# Large CSV files
+outputs/data/*.csv
+
+# Generated figures (can be regenerated)
+# Uncomment if figures are too large:
+# outputs/figures/*.png
+# outputs/figures/*.pdf
+
+# ============================================================================
+# Jupyter Notebook
+# ============================================================================
+# Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Jupyter temp files
+*.nbconvert.ipynb
+
+# ============================================================================
+# Julia
+# ============================================================================
+# Julia compiled files
+*.ji
+*.o
+*.so
+*.dylib
+
+# Julia package manager
+Manifest.toml
+# Keep Project.toml for dependency tracking
+
+# Julia REPL history
+.julia_history
+
+# R history
+.Rhistory
+
+# ============================================================================
+# Python
+# ============================================================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# ============================================================================
+# Data Files
+# ============================================================================
+# Raw data (if large)
+data/raw/
+*.dat
+
+# Temporary data
+data/temp/
+data/tmp/
+
+# Large datasets
+*.hdf5
+*.h5
+*.parquet
+
+# ============================================================================
+# System Files
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# ============================================================================
+# IDE and Editor
+# ============================================================================
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+\#*\#
+.\#*
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+*.tmp
+*.temp
+*.log
+*.bak
+*.backup
+
+# ============================================================================
+# Build and Cache
+# ============================================================================
+build/
+dist/
+*.egg-info/
+.cache/
+
+# ============================================================================
+# Sensitive Information
+# ============================================================================
+# Credentials and secrets
+.env
+.env.local
+credentials.json
+secrets/
+*.key
+*.pem
+
+# Configuration with sensitive data
+config/private/
+
+# ============================================================================
+# Git
+# ============================================================================
+*.orig
+*.rej
+
+# ============================================================================
+# Project-Specific
+# ============================================================================
+# Model weights (if large)
+*.pkl
+*.joblib
+*.weights
+
+# Optimization results (if large)
+results/large/
+
+# Intermediate computation files
+*.intermediate
+
+# ============================================================================
+# Work-in-Progress Projects (Not Ready for Public)
+# ============================================================================
+# Exclude WIP allocation projects
+dp-allocation/
+e2e-allocation/
+ssm-allocation/
+
+# Support/experimental files
+portfolio-allocation-models/support/
+portfolio-allocation-models/GOAL.md
+
+# Internal notes
+model_validation_lingo.txt
+
+# ============================================================================
+# Keep These Files
+# ============================================================================
+# Force include important files even if in ignored directories
+!README.md
+!*.ipynb
+!.gitkeep

@@ -1,0 +1,6 @@
+Model,Status,ConstraintsSatisfied,TargetReturn,WeightsValid
+MV,✅,✅,✅,✅
+CVaR,✅,✅,✅,✅
+Omega,✅,✅,⚠️,✅
+MVBU,✅,✅,✅,✅
+MVEU,✅,✅,⚠️,✅

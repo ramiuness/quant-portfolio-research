@@ -43,11 +43,40 @@ Comprehensive validation of classical and robust portfolio optimization approach
 
 ---
 
+### ✅ State-Space Modeling for Asset Allocation
+
+**Status**: Complete (January 2025)
+
+Validation study evaluating whether state-space model filtering of financial returns improves portfolio allocation performance.
+
+**Location**: [`state-space-modeling/`](state-space-modeling/)
+
+**Research Question**: Does SSM filtering improve portfolio allocation vs. raw returns?
+
+**Filtering Scenarios**:
+- Raw returns (baseline)
+- Gaussian AR(1) SSM filtered (Kalman filter)
+- Student-t AR(1) SSM filtered (particle filter - robust to outliers)
+
+**Key Findings**:
+- **Student-t SSM**: Superior performance during volatile periods and crisis regimes
+- **Gaussian SSM**: Effective noise reduction for stable markets
+- **CVaR + Student-t**: Best combination for tail-risk management (~20% drawdown reduction)
+- **Multi-language validation**: Julia/Python cross-validation confirmed implementation correctness
+
+**Quick Links**:
+- [Executive Summary](state-space-modeling/docs/EXECUTIVE_SUMMARY.md) - High-level findings
+- [Full Documentation](state-space-modeling/README.md) - Complete methodology
+- [API Documentation](state-space-modeling/src/README.md) - Technical implementation details
+
+---
+
 ### 🔄 Additional Validation Projects
 
-**Status**: Coming Soon
+**Status**: In Progress
 
-Additional validation studies in quantitative modeling are currently in development and will be added to this repository as they are completed.
+Additional validation studies in quantitative modeling are currently in development:
+- **Stochastic Volatility Models for TSX**: Validation of GARCH, EGARCH, and stochastic volatility models for modeling TSX index volatility dynamics
 
 ---
 
@@ -106,15 +135,15 @@ All validation studies in this repository follow a consistent framework:
 
 ### Languages & Tools
 - **Julia**: Primary language for optimization and numerical computing
+- **R**: State-space modeling, time series analysis, statistical estimation
 - **Python**: Data processing and alternative implementations
 - **Jupyter**: Interactive analysis and reporting
 - **Git**: Version control and reproducibility
 
 ### Key Libraries
-- **JuMP**: Mathematical optimization modeling
-- **DataFrames.jl**: Data manipulation
-- **Plots.jl**: Visualization
-- **Distributions.jl**: Statistical modeling
+- **Julia**: JuMP, Ipopt, DataFrames.jl, Plots.jl, Distributions.jl
+- **R**: KFAS (Kalman filter), pomp (particle filter), tidyquant, tidyverse
+- **Python**: pandas, numpy, scipy, matplotlib
 
 ---
 
@@ -169,17 +198,33 @@ cd portfolio-allocation-models/synthetic-data/
 model-validation/
 ├── README.md                                    # This file
 ├── .gitignore                                   # Git exclusions
-└── portfolio-allocation-models/                 # Portfolio optimization validation
-    └── synthetic_data_validation/               # Phase 1: Synthetic data
-        ├── README.md                            # Project documentation
-        ├── src/                                 # Source code (API only)
-        │   └── README.md                        # Public API documentation
-        ├── outputs/                             # Results and reports
-        │   ├── figures/                         # Visualizations
-        │   └── reports/                         # Jupyter notebooks
-        ├── tests/                               # Test suite (structure only)
-        └── docs/                                # Documentation (structure only)
-            └── EXECUTIVE_SUMMARY.md             # High-level findings
+│
+├── portfolio-allocation-models/                 # Portfolio optimization validation
+│   └── synthetic_data_validation/               # Phase 1: Synthetic data
+│       ├── README.md                            # Project documentation
+│       ├── src/                                 # Source code (API only)
+│       │   └── README.md                        # Public API documentation
+│       ├── outputs/                             # Results and reports
+│       │   ├── figures/                         # Visualizations
+│       │   └── reports/                         # Jupyter notebooks
+│       ├── tests/                               # Test suite (structure only)
+│       └── docs/                                # Documentation (structure only)
+│           └── EXECUTIVE_SUMMARY.md             # High-level findings
+│
+└── state-space-modeling/                        # SSM filtering for allocation
+    ├── README.md                                # Project documentation
+    ├── src/                                     # Source code (API only)
+    │   └── README.md                            # Public API documentation
+    ├── outputs/                                 # Results and reports
+    │   ├── reports/                             # Analysis reports
+    │   └── data/                                # Summary statistics
+    ├── data/                                    # Sample data
+    │   ├── raw/                                 # TSX + T-bill sample
+    │   ├── filtered/                            # SSM filtered outputs
+    │   └── allocation/                          # Allocation results
+    ├── tests/                                   # Test suite (structure only)
+    └── docs/                                    # Documentation (structure only)
+        └── EXECUTIVE_SUMMARY.md                 # High-level findings
 ```
 
 ---
@@ -239,7 +284,8 @@ For questions, suggestions, or collaboration opportunities:
 | Project | Phase | Status | Last Updated |
 |---------|-------|--------|--------------|
 | Portfolio Optimization | Synthetic Data | ✅ Complete | January 2025 |
-| Additional Projects | - | 🔄 Coming Soon | - |
+| State-Space Modeling | All Phases | ✅ Complete | January 2025 |
+| Stochastic Volatility Models | - | 🔄 In Progress | - |
 
 ---
 

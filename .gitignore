@@ -8,6 +8,9 @@
 !**/docs/EXECUTIVE_SUMMARY.md
 **/tests/
 **/*.jl
+**/*.R
+**/*.Rmd
+**/*.py
 !**/docs/.gitkeep
 !**/tests/.gitkeep
 !**/src/.gitkeep
@@ -192,6 +195,11 @@ ssm-allocation/
 # Support/experimental files
 portfolio-allocation-models/support/
 portfolio-allocation-models/GOAL.md
+state-space-modeling/support/
+state-space-modeling/julia/
+state-space-modeling/R/
+state-space-modeling/reports/
+state-space-modeling/MODIFICATIONS_LOG.md
 
 # Internal notes
 model_validation_lingo.txt

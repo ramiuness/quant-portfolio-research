@@ -20,31 +20,12 @@ This project validates **5 portfolio optimization models** on controlled synthet
 
 ## 📊 View the Results
 
-**Choose your level of detail:**
-
-### 1. Executive Summary (5 min read, no code)
-→ [docs/EXECUTIVE_SUMMARY.md](docs/EXECUTIVE_SUMMARY.md)
-- High-level findings and strategic recommendations
-- Key insights from all 4 analytical themes
-- Ideal for stakeholders and decision-makers
-
-### 2. Full HTML Report (15 min read, clean presentation)
-→ [outputs/reports/Phase1_Synthetic_Validation_Complete.html](outputs/reports/Phase1_Synthetic_Validation_Complete.html)
-- Complete analysis with all visualizations
-- Professional presentation with code hidden
-- Best for sharing and presentations
-
-### 3. Jupyter Notebook (full technical review)
+### Jupyter Notebook (Full Analysis)
 → [outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb](outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb)
-- Full reproducible analysis with source code
-- All computations and implementation details
+- Complete reproducible analysis with source code
+- All visualizations and performance metrics
+- Four analytical themes: Performance, Diversification, Classical vs Robust, Risk-Return Trade-offs
 - For researchers, developers, and technical reviewers
-
-### 4. Report Generation Instructions
-→ [outputs/reports/REPORT_README.md](outputs/reports/REPORT_README.md)
-- How to regenerate HTML reports
-- Setup and dependencies
-- Technical documentation
 
 ---
 

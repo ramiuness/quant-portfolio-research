@@ -5,6 +5,7 @@
 # ============================================================================
 # Keep directory structure visible, but exclude content
 **/docs/
+!**/docs/EXECUTIVE_SUMMARY.md
 **/tests/
 **/*.jl
 !**/docs/.gitkeep

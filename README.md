@@ -38,7 +38,7 @@ Comprehensive validation of classical and robust portfolio optimization approach
 
 **Quick Links**:
 - [Full Analysis Report](portfolio-allocation-models/synthetic_data_validation/README.md)
-- [View Results (nbviewer)](https://nbviewer.org/github/ramiuness/model-validation/blob/main/portfolio-allocation-models/synthetic_data_validation/outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb) ⭐
+- [Jupyter Notebook](portfolio-allocation-models/synthetic_data_validation/outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb)
 
 ---
 

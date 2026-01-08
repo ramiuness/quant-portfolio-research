@@ -20,16 +20,12 @@ This project validates **5 portfolio optimization models** on controlled synthet
 
 ## 📊 View the Results
 
-### Jupyter Notebook with Plots (Recommended)
-→ **[View on nbviewer](https://nbviewer.org/github/ramiuness/model-validation/blob/main/portfolio-allocation-models/synthetic_data_validation/outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb)** ⭐ Best option
-- Complete analysis with all visualizations rendered
-- Full reproducible analysis with source code
+### Jupyter Notebook
+→ [outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb](outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb)
+- Complete reproducible analysis with source code
+- All visualizations and performance metrics
 - Four analytical themes: Performance, Diversification, Classical vs Robust, Risk-Return Trade-offs
-
-### Alternative: Download HTML Report
-→ [Download HTML](outputs/reports/Phase1_Synthetic_Validation_Complete.html) (right-click → Save As)
-- Open locally in your browser for clean presentation
-- Note: Too large for GitHub's online viewer
+- **Note**: Clone the repository to view plots locally, or see visualizations below
 
 ---
 

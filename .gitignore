@@ -23,6 +23,8 @@ generate_api_docs.jl
 # ============================================================================
 # HTML reports (too large for Git, host separately)
 *.html
+# Exception: Include portfolio optimization HTML report
+!portfolio-allocation-models/synthetic_data_validation/outputs/reports/*.html
 
 # Large CSV files
 outputs/data/*.csv

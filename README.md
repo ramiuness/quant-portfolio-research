@@ -37,8 +37,9 @@ Comprehensive validation of classical and robust portfolio optimization approach
 - **Trade-off Identified**: Performance vs. scalability (Omega vs. MVEU)
 
 **Quick Links**:
-- [Full Analysis Report](portfolio-allocation-models/synthetic_data_validation/README.md)
-- [Jupyter Notebook](portfolio-allocation-models/synthetic_data_validation/outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb)
+- [Executive Summary](portfolio-allocation-models/synthetic_data_validation/docs/EXECUTIVE_SUMMARY.md) - High-level findings
+- [Full Analysis Report](portfolio-allocation-models/synthetic_data_validation/README.md) - Complete documentation
+- [Jupyter Notebook](portfolio-allocation-models/synthetic_data_validation/outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb) - Technical analysis
 
 ---
 

@@ -20,7 +20,14 @@ This project validates **5 portfolio optimization models** on controlled synthet
 
 ## 📊 View the Results
 
-### Jupyter Notebook
+### Executive Summary (Recommended Starting Point)
+→ [docs/EXECUTIVE_SUMMARY.md](docs/EXECUTIVE_SUMMARY.md)
+- High-level findings and strategic recommendations
+- Key insights from all 4 analytical themes
+- Model selection guidelines
+- Ideal for stakeholders and quick overview
+
+### Jupyter Notebook (Full Technical Analysis)
 → [outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb](outputs/reports/Phase1_Synthetic_Validation_Complete.ipynb)
 - Complete reproducible analysis with source code
 - All visualizations and performance metrics

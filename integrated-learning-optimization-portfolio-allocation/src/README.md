@@ -339,14 +339,26 @@ print(f"Learned kappa: {e2e.kappa.item():.4f}")
 
 ---
 
+## Original Source
+
+This library is adapted from the **E2E-DRO** repository by Iyengar Lab (Columbia University):
+
+- **Repository**: [github.com/Iyengar-Lab/E2E-DRO](https://github.com/Iyengar-Lab/E2E-DRO)
+- **Paper**: [Distributionally Robust End-to-End Portfolio Construction](https://arxiv.org/abs/2206.05134)
+- **Authors**: Giorgio Costa, Garud Iyengar
+- **Published**: Quantitative Finance, Vol. 23, No. 10 (2023)
+
+---
+
 ## Reference Papers
 
 The implementation is based on the following research:
 
-1. **Decision-Focused Learning**: End-to-end optimization through the decision layer
-2. **OptNet**: Differentiable optimization as a neural network layer
-3. **cvxpylayers**: Differentiable convex optimization layers
-4. **SPO (Smart Predict then Optimize)**: Task-loss minimization framework
+1. **Distributionally Robust End-to-End Portfolio Construction** (Costa & Iyengar, 2023): Core framework for robust E2E learning
+2. **Decision-Focused Learning**: End-to-end optimization through the decision layer
+3. **OptNet**: Differentiable optimization as a neural network layer
+4. **cvxpylayers**: Differentiable convex optimization layers
+5. **SPO (Smart Predict then Optimize)**: Task-loss minimization framework
 
 See `references/` directory for full papers.
 

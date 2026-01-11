@@ -79,6 +79,9 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - Student-t SSM: More adaptive to outliers and regime changes
 - Both models successfully decomposed returns into signal (state) and noise (observation error)
 
+![Combined Comparison](../outputs/figures/julia_combined_comparison.png)
+*Figure: Combined comparison of raw signal vs Gaussian and Student-t filtered returns*
+
 ![Forecast Metrics](../outputs/figures/validation_forecast_metrics.png)
 *Figure: Forecast accuracy metrics across filtering scenarios*
 

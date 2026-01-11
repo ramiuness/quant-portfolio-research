@@ -94,6 +94,7 @@ Validation study comparing **Predict-then-Optimize (PO)** vs **Smart Predict-the
 
 **Quick Links**:
 - [Executive Summary](integrated-learning-optimization-portfolio-allocation/docs/EXECUTIVE_SUMMARY.md) - High-level findings
+- [Full Documentation](integrated-learning-optimization-portfolio-allocation/README.md) - Complete methodology
 - [API Documentation](integrated-learning-optimization-portfolio-allocation/src/README.md) - e2edro library reference
 - [Synthetic Data Validation](integrated-learning-optimization-portfolio-allocation/outputs/reports/mv_validation_synthetic_report.ipynb) - Controlled environment testing
 - [Real Data Validation](integrated-learning-optimization-portfolio-allocation/outputs/reports/mv_validation_real_report.ipynb) - Market data evaluation
@@ -251,6 +252,7 @@ model-validation/
 │   ├── src/                                     # Source code (API only)
 │   │   └── README.md                            # Public API documentation
 │   ├── outputs/                                 # Results and reports
+│   │   ├── figures/                             # Visualizations
 │   │   ├── reports/                             # Analysis reports
 │   │   └── data/                                # Summary statistics
 │   ├── data/                                    # Sample data
@@ -262,10 +264,15 @@ model-validation/
 │       └── EXECUTIVE_SUMMARY.md                 # High-level findings
 │
 └── integrated-learning-optimization-portfolio-allocation/  # Decision-focused learning
+    ├── README.md                                # Project documentation
     ├── src/                                     # Source code (structure only)
-    │   └── e2edro/                              # End-to-end DRO library
+    │   ├── e2edro/                              # End-to-end DRO library
+    │   └── README.md                            # API documentation
     ├── outputs/                                 # Results and reports
+    │   ├── figures/                             # Visualizations
     │   └── reports/                             # Validation notebooks
+    ├── docs/                                    # Documentation
+    │   └── EXECUTIVE_SUMMARY.md                 # High-level findings
     └── references/                              # Academic papers
 ```
 

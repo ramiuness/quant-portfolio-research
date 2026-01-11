@@ -89,15 +89,24 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - More frequent rebalancing required
 - Performance varied significantly across allocation methods
 
+![Allocation Weights: Raw Returns](../outputs/figures/julia_allocation_weights_raw.png)
+*Figure: Portfolio allocation weights using raw (unfiltered) returns*
+
 **Gaussian-Filtered Returns:**
 - Smoother allocation weights over time
 - Reduced turnover compared to raw returns
 - Improved risk-adjusted returns for MV and CVaR methods
 
+![Allocation Weights: Gaussian Filtered](../outputs/figures/julia_allocation_weights_gaussian.png)
+*Figure: Portfolio allocation weights using Gaussian SSM-filtered returns*
+
 **Student-t-Filtered Returns:**
 - Best performance during crisis periods
 - Most stable weight allocation
 - Superior downside protection (lower max drawdown)
+
+![Allocation Weights: Student-t Filtered](../outputs/figures/julia_allocation_weights_student_t.png)
+*Figure: Portfolio allocation weights using Student-t SSM-filtered returns*
 
 ![Cumulative Wealth Comparison: Student-t Filtered](../outputs/figures/julia_cumulative_wealth_student_t.png)
 *Figure: Cumulative wealth with Student-t SSM filtering showing superior performance during volatile periods*
@@ -238,6 +247,9 @@ This validation study demonstrates that:
 - Transaction costs incentivize stable, low-turnover strategies
 
 However, filtering is not a panacea—it must be applied judiciously based on market conditions and investor objectives.
+
+![Validation Summary](../outputs/figures/validation_summary.png)
+*Figure: Summary of validation results across all scenarios and methods*
 
 ---
 

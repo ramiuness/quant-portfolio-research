@@ -46,6 +46,9 @@ This report presents a comprehensive validation of **5 portfolio optimization mo
 #### Runner-Up: CVaR
 - **Annualized Sharpe Ratio**: 1.16
 
+![Performance Metrics Comparison](../outputs/figures/theme1_performance_metrics.png)
+*Figure: Risk-adjusted performance metrics across all 5 models*
+
 #### Key Insight
 On synthetic data, concentrated portfolios (Omega, CVaR) outperform highly diversified ones. Classical models focusing on specific risk measures deliver superior risk-adjusted performance.
 
@@ -71,6 +74,9 @@ On synthetic data, concentrated portfolios (Omega, CVaR) outperform highly diver
 - Concentration does NOT guarantee performance (MVBU has lowest annualized Sharpe of 1.03 despite high concentration)
 - Portfolio capacity is a critical consideration for scalability
 
+![Diversification & Capacity](../outputs/figures/theme2_diversification_capacity.png)
+*Figure: Portfolio diversification and capacity metrics across models*
+
 ---
 
 ### Theme 3: Classical vs Robust Approaches
@@ -95,6 +101,9 @@ On synthetic data, concentrated portfolios (Omega, CVaR) outperform highly diver
 #### Key Insight
 Box uncertainty is too conservative on synthetic data. Ellipsoid uncertainty trades performance for stability and scalability - ideal for institutional investors prioritizing capacity over maximum returns.
 
+![Classical vs Robust Comparison](../outputs/figures/theme3_classical_vs_robust.png)
+*Figure: Comparison of classical (MV) vs robust (MVBU, MVEU) approaches*
+
 ---
 
 ### Theme 4: Risk-Return Trade-offs
@@ -116,6 +125,12 @@ Box uncertainty is too conservative on synthetic data. Ellipsoid uncertainty tra
 
 #### Key Insight
 The sweet spot lies in moderate diversification - not too concentrated (limits scalability), not too diversified (sacrifices performance).
+
+![Risk-Return Trade-offs](../outputs/figures/theme4_risk_return_tradeoffs.png)
+*Figure: Risk-return trade-off analysis showing efficient frontier patterns*
+
+![Portfolio Weight Heatmap](../outputs/figures/weight_heatmap.png)
+*Figure: Portfolio weight allocation across all 5 models*
 
 ---
 

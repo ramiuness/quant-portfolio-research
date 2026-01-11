@@ -192,6 +192,12 @@ dp-allocation/
 e2e-allocation/
 ssm-allocation/
 
+# Integrated learning - exclude working notebooks, cache, scripts, data; keep reports and src/e2edro structure
+integrated-learning-optimization-portfolio-allocation/notebooks/
+integrated-learning-optimization-portfolio-allocation/outputs/cache/
+integrated-learning-optimization-portfolio-allocation/scripts/
+integrated-learning-optimization-portfolio-allocation/data/
+
 # Support/experimental files
 portfolio-allocation-models/support/
 portfolio-allocation-models/GOAL.md

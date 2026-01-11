@@ -85,6 +85,9 @@ Where:
 
 **Key Insight**: The `max_weight` constraint increases diversification by ~5x while maintaining reasonable performance.
 
+![Portfolio Weight Distribution](../outputs/figures/synthetic_weight_distribution.png)
+*Figure: Portfolio weight distribution showing the effect of diversification constraints*
+
 ### 3. Performance Comparison
 
 **Synthetic Data** (Best Sharpe: PO-MV-Constrained = 0.85):
@@ -96,12 +99,18 @@ Where:
 | E2E-Learned | 0.81 | 0.98 | -8.1% |
 | E2E-Constrained | 0.83 | 1.93 | -4.7% |
 
+![Synthetic Data: Cumulative Wealth Comparison](../outputs/figures/synthetic_cumulative_wealth.png)
+*Figure: Cumulative wealth (TRI) comparison across models on synthetic data*
+
 **Real Data** (Best Sharpe: EW = 0.14):
 | Model | Sharpe | Sortino | Max Drawdown |
 |-------|--------|---------|--------------|
 | EW (Benchmark) | 0.14 | 0.16 | -30.4% |
 | PO-MV | 0.09 | 0.12 | -43.6% |
 | E2E-Constrained | 0.12 | 0.16 | -35.5% |
+
+![Real Data: Cumulative Wealth Comparison](../outputs/figures/real_cumulative_wealth.png)
+*Figure: Cumulative wealth (TRI) comparison across models on real market data*
 
 ### 4. Synthetic vs Real Data Divergence
 

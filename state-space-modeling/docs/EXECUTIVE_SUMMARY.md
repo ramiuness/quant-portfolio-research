@@ -71,10 +71,16 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - **Student-t SSM** showed superior robustness during high-volatility periods
 - **Directional accuracy** increased by filtering noise from raw returns
 
+![Filtered Returns Comparison](../outputs/figures/validation_filtered_returns_comparison.png)
+*Figure: Comparison of raw vs SSM-filtered returns*
+
 **State Estimation:**
 - Gaussian SSM: Smooth filtered states with reduced noise
 - Student-t SSM: More adaptive to outliers and regime changes
 - Both models successfully decomposed returns into signal (state) and noise (observation error)
+
+![Forecast Metrics](../outputs/figures/validation_forecast_metrics.png)
+*Figure: Forecast accuracy metrics across filtering scenarios*
 
 ### 2. Allocation Performance by Scenario
 
@@ -93,6 +99,9 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - Most stable weight allocation
 - Superior downside protection (lower max drawdown)
 
+![Cumulative Wealth Comparison: Student-t Filtered](../outputs/figures/julia_cumulative_wealth_student_t.png)
+*Figure: Cumulative wealth with Student-t SSM filtering showing superior performance during volatile periods*
+
 ### 3. Model-Specific Insights
 
 **Mean-Variance (MV):**
@@ -104,6 +113,9 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - **Best with**: Student-t filtering (tail-risk focus aligns with robust filtering)
 - **Improvement**: ~20% reduction in maximum drawdown
 - **Benefit**: Consistent tail-risk management
+
+![CVaR Allocation Comparison](../outputs/figures/validation_allocation_cvar_comparison.png)
+*Figure: CVaR allocation performance across filtering scenarios*
 
 **Omega Ratio:**
 - **Best with**: Gaussian filtering

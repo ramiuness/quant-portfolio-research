@@ -93,6 +93,8 @@ Validation study comparing **Predict-then-Optimize (PO)** vs **Smart Predict-the
 - **Synthetic vs Real**: SPO shows promise on synthetic data; real market results more nuanced
 
 **Quick Links**:
+- [Executive Summary](integrated-learning-optimization-portfolio-allocation/docs/EXECUTIVE_SUMMARY.md) - High-level findings
+- [API Documentation](integrated-learning-optimization-portfolio-allocation/src/README.md) - e2edro library reference
 - [Synthetic Data Validation](integrated-learning-optimization-portfolio-allocation/outputs/reports/mv_validation_synthetic_report.ipynb) - Controlled environment testing
 - [Real Data Validation](integrated-learning-optimization-portfolio-allocation/outputs/reports/mv_validation_real_report.ipynb) - Market data evaluation
 

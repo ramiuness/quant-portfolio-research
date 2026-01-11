@@ -71,6 +71,39 @@ Validation study evaluating whether state-space model filtering of financial ret
 
 ---
 
+### ✅ Integrated Learning for Portfolio Optimization
+
+**Status**: Complete (January 2025)
+
+Validation study comparing **Predict-then-Optimize (PO)** vs **Smart Predict-then-Optimize (SPO/Decision-Focused Learning)** approaches for Mean-Variance portfolio construction.
+
+**Location**: [`integrated-learning-optimization-portfolio-allocation/`](integrated-learning-optimization-portfolio-allocation/)
+
+**Research Question**: Does end-to-end learning of risk aversion (κ) improve portfolio performance vs. fixed parameters?
+
+**Models Evaluated**:
+- Equal Weight (Benchmark)
+- PO-MV: Predict-then-Optimize with fixed κ
+- E2E-MV-Learned: End-to-end learning with learnable κ
+- Constrained variants with max_weight diversification
+
+**Key Findings**:
+- **Learnable κ**: Model successfully learns optimal risk aversion end-to-end
+- **Diversification constraints**: `max_weight` effectively increases holdings from ~1 to ~5 assets
+- **Synthetic vs Real**: SPO shows promise on synthetic data; real market results more nuanced
+
+**Quick Links**:
+- [Synthetic Data Validation](integrated-learning-optimization-portfolio-allocation/outputs/reports/mv_validation_synthetic_report.ipynb) - Controlled environment testing
+- [Real Data Validation](integrated-learning-optimization-portfolio-allocation/outputs/reports/mv_validation_real_report.ipynb) - Market data evaluation
+
+**Reference Papers** (in `references/`):
+- Distributionally Robust End-to-End Portfolio Construction
+- Decision-Focused Learning: Foundations, State of the Art
+- OptNet: Differentiable Optimization as a Layer in Neural Networks
+- Smart Predict then Optimize (SPO)
+
+---
+
 ### 🔄 Additional Validation Projects
 
 **Status**: In Progress
@@ -143,7 +176,7 @@ All validation studies in this repository follow a consistent framework:
 ### Key Libraries
 - **Julia**: JuMP, Ipopt, DataFrames.jl, Plots.jl, Distributions.jl
 - **R**: KFAS (Kalman filter), pomp (particle filter), tidyquant, tidyverse
-- **Python**: pandas, numpy, scipy, matplotlib
+- **Python**: pandas, numpy, scipy, matplotlib, torch, cvxpy, cvxpylayers
 
 ---
 
@@ -211,20 +244,27 @@ model-validation/
 │       └── docs/                                # Documentation (structure only)
 │           └── EXECUTIVE_SUMMARY.md             # High-level findings
 │
-└── state-space-modeling/                        # SSM filtering for allocation
-    ├── README.md                                # Project documentation
-    ├── src/                                     # Source code (API only)
-    │   └── README.md                            # Public API documentation
+├── state-space-modeling/                        # SSM filtering for allocation
+│   ├── README.md                                # Project documentation
+│   ├── src/                                     # Source code (API only)
+│   │   └── README.md                            # Public API documentation
+│   ├── outputs/                                 # Results and reports
+│   │   ├── reports/                             # Analysis reports
+│   │   └── data/                                # Summary statistics
+│   ├── data/                                    # Sample data
+│   │   ├── raw/                                 # TSX + T-bill sample
+│   │   ├── filtered/                            # SSM filtered outputs
+│   │   └── allocation/                          # Allocation results
+│   ├── tests/                                   # Test suite (structure only)
+│   └── docs/                                    # Documentation (structure only)
+│       └── EXECUTIVE_SUMMARY.md                 # High-level findings
+│
+└── integrated-learning-optimization-portfolio-allocation/  # Decision-focused learning
+    ├── src/                                     # Source code (structure only)
+    │   └── e2edro/                              # End-to-end DRO library
     ├── outputs/                                 # Results and reports
-    │   ├── reports/                             # Analysis reports
-    │   └── data/                                # Summary statistics
-    ├── data/                                    # Sample data
-    │   ├── raw/                                 # TSX + T-bill sample
-    │   ├── filtered/                            # SSM filtered outputs
-    │   └── allocation/                          # Allocation results
-    ├── tests/                                   # Test suite (structure only)
-    └── docs/                                    # Documentation (structure only)
-        └── EXECUTIVE_SUMMARY.md                 # High-level findings
+    │   └── reports/                             # Validation notebooks
+    └── references/                              # Academic papers
 ```
 
 ---
@@ -285,6 +325,7 @@ For questions, suggestions, or collaboration opportunities:
 |---------|-------|--------|--------------|
 | Portfolio Optimization | Synthetic Data | ✅ Complete | January 2025 |
 | State-Space Modeling | All Phases | ✅ Complete | January 2025 |
+| Integrated Learning (SPO) | All Phases | ✅ Complete | January 2025 |
 | Stochastic Volatility Models | - | 🔄 In Progress | - |
 
 ---

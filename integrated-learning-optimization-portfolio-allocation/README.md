@@ -1,19 +1,100 @@
 # Integrated Learning for Portfolio Optimization
 
-A validation study comparing **Predict-then-Optimize (PO)** and **Smart Predict-then-Optimize (SPO/Decision-Focused Learning)** approaches for Mean-Variance portfolio construction with learnable risk aversion.
+A validation study comparing **Predict-then-Optimize (PO)** and **Smart Predict-then-Optimize (SPO)** approaches for Mean-Variance portfolio construction with learnable risk aversion.
 
 ## Overview
 
-This project evaluates whether end-to-end learning of optimization parameters improves portfolio performance compared to traditional two-stage approaches.
+This project presents a comprehensive validation study comparing two paradigms for integrating machine learning with portfolio optimization:
 
-### Research Question
-**Does end-to-end learning of risk aversion (κ) improve portfolio performance compared to fixed parameters?**
+1. **Predict-then-Optimize (PO)**: The traditional two-stage approach where a model first predicts expected returns, then a separate optimization step constructs the portfolio treating predictions as given.
 
-### Two Paradigms Compared
-1. **Predict-then-Optimize (PO)**: Traditional two-stage approach - predict returns first, then optimize
-2. **Smart Predict-then-Optimize (SPO)**: Decision-focused learning - train prediction model end-to-end with the optimization objective
+2. **Smart Predict-then-Optimize (SPO)**, also known as **Decision-Focused Learning**: An end-to-end approach where the prediction model is trained with direct awareness of the downstream optimization objective, allowing gradients to flow through the portfolio construction step.
 
-### Models Evaluated
+This work extends the theoretical framework established in *"Distributionally Robust End-to-End Portfolio Construction"* (Costa & Iyengar, Quantitative Finance, 2023), applying decision-focused learning to Mean-Variance optimization with learnable risk aversion.
+
+The study evaluates whether embedding optimization objectives directly into the learning process—allowing the model to jointly learn prediction parameters and risk preferences—yields superior portfolio outcomes compared to the traditional sequential paradigm.
+
+---
+
+## Research Questions
+
+This study investigates several interconnected questions at the intersection of machine learning and portfolio theory:
+
+1. **Decision-Focused vs. Predict-then-Optimize**: Does training the prediction model with awareness of the downstream optimization objective lead to better portfolio decisions than the traditional two-stage approach?
+
+2. **Learnable vs. Fixed Risk Preferences**: Can the model discover an optimal risk aversion coefficient (κ) through gradient-based learning, and how does this data-driven parameterization compare to conventional fixed values?
+
+3. **Synthetic vs. Real Market Performance**: How does the relative advantage of SPO over PO transfer from a controlled synthetic environment to real market data where model assumptions may be violated?
+
+4. **Portfolio Concentration Trade-offs**: What is the impact of diversification constraints on risk-adjusted returns? How do constrained portfolios compare to unconstrained solutions in terms of Sharpe ratio, drawdown protection, and effective number of holdings?
+
+5. **Risk Aversion Sensitivity**: How robust are portfolio outcomes to the choice of κ, and does the learned value fall within a stable performance region?
+
+---
+
+## Methodology
+
+### Factor-Based Return Prediction
+
+Expected asset returns are modeled as linear functions of systematic risk factors, following the Arbitrage Pricing Theory tradition. The feature set comprises **8 Fama-French factors**:
+
+| Factor | Description |
+|--------|-------------|
+| Market | Excess return of the market portfolio |
+| SMB | Small Minus Big (size premium) |
+| HML | High Minus Low (value premium) |
+| RMW | Robust Minus Weak (profitability) |
+| CMA | Conservative Minus Aggressive (investment) |
+| MOM | Momentum (12-1 month return) |
+| ST_Rev | Short-term reversal |
+| LT_Rev | Long-term reversal |
+
+The prediction model learns factor exposures (β) that map observable factors to expected returns. This factor-based approach grounds the study in established asset pricing theory while providing economically interpretable features.
+
+### Optimization Paradigms
+
+**Predict-then-Optimize (PO)**: The prediction model minimizes forecasting error (MSE) without regard to how predictions will be used. The optimizer then treats these predictions as ground truth.
+
+**Smart Predict-then-Optimize (SPO)**: The prediction model minimizes realized portfolio loss, computed by passing predictions through the optimization layer and evaluating against actual returns. This decision-focused objective aligns learning with the ultimate investment goal.
+
+### Differentiable Optimization Layer
+
+The Mean-Variance optimization problem is embedded as a differentiable layer using cvxpylayers:
+
+```
+maximize:  μᵀw - κ wᵀΣw
+subject to: w ≥ 0, 1ᵀw = 1, w ≤ max_weight (optional)
+```
+
+Where:
+- μ: Predicted expected returns (from factor model)
+- Σ: Covariance matrix (updated via rolling window)
+- κ: Risk aversion coefficient (fixed in PO, learnable in SPO)
+- w: Portfolio weights
+
+This formulation enables gradient-based learning of the risk aversion coefficient κ, treating it as a differentiable parameter rather than a fixed hyperparameter.
+
+### Validation Environments
+
+The methodology is validated across two complementary data settings:
+
+**Calibrated Synthetic Data**: 20 assets driven by 8 factors with embedded volatility regime transitions (low → normal → high). Statistical properties are calibrated to historical market data. This controlled environment provides a ground-truth baseline where model assumptions hold by construction.
+
+**Real Market Data**: 20 US equities spanning major sectors (Technology, Financials, Energy, Consumer, Healthcare, etc.) from 2000–2025. This tests robustness under real-world conditions including distributional shifts, factor instability, and market microstructure effects.
+
+### Evaluation Protocol
+
+All models undergo **rolling-window out-of-sample backtesting** (4 windows) with periodic covariance re-estimation. This simulates realistic portfolio management where:
+- Models are trained on historical data
+- Performance is measured on subsequent unseen periods
+- Parameters are updated as new information arrives
+
+Metrics evaluated: Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Turnover, and Effective Number of Holdings.
+
+---
+
+## Models Evaluated
+
 | Model | Type | Risk Aversion | Constraints |
 |-------|------|---------------|-------------|
 | **EW** | Benchmark | N/A | Equal weight 1/n |
@@ -24,7 +105,7 @@ This project evaluates whether end-to-end learning of optimization parameters im
 
 ---
 
-## 📊 View the Results
+## View the Results
 
 ### Executive Summary (Recommended Starting Point)
 → [docs/EXECUTIVE_SUMMARY.md](docs/EXECUTIVE_SUMMARY.md)
@@ -45,27 +126,31 @@ This project evaluates whether end-to-end learning of optimization parameters im
 
 ---
 
-## Key Findings at a Glance
+## Key Findings
 
-### Learnable Risk Aversion Works
-- E2E models successfully learn κ ≈ 0.11 (vs baseline κ=1.0)
-- Model adapts to data characteristics without manual tuning
+### Cross-Environment Comparison
 
-### Diversification Constraints Are Effective
-| Model | Effective Holdings | Max Weight |
-|-------|-------------------|------------|
-| Unconstrained | ~1-2 assets | 100% |
-| Constrained (20%) | ~5 assets | 20% |
+| Metric | Synthetic Data | Real Data |
+|--------|---------------|-----------|
+| Best Sharpe | PO-MV-Constrained (0.85) | EW Benchmark (0.14) |
+| Learned κ | 0.11 (less risk-averse) | 0.11 (consistent) |
+| SPO vs PO | Comparable performance | No clear advantage |
+| Constraint benefit | +80% Sortino improvement | -8% drawdown reduction |
 
-### Performance Summary
+**Interpretation**: On synthetic data where the factor model specification is correct, all optimization approaches dominate the naive benchmark. On real data, the equal-weight portfolio's implicit diversification proves remarkably robust—a result that underscores the gap between theoretical optimality and empirical performance.
 
-**Synthetic Data** (Best Sharpe: PO-MV-Constrained = 0.85):
-- All optimized models significantly outperform EW benchmark
-- Constrained models achieve better Sortino ratios
+### Learnable Risk Aversion
 
-**Real Data** (Best Sharpe: EW = 0.14):
-- EW benchmark is competitive
-- Constrained models show better risk management
+The E2E models successfully learn κ ≈ 0.11 across both environments, significantly lower than the baseline κ=1.0. This indicates the model prefers less aggressive risk penalization, adapting to data characteristics without manual tuning.
+
+### Diversification Constraints
+
+| Configuration | Effective Holdings | Max Weight | Trade-off |
+|--------------|-------------------|------------|-----------|
+| Unconstrained | ~1-2 assets | 100% | Higher concentration risk |
+| Constrained (20%) | ~5 assets | 20% | Better risk-adjusted returns |
+
+Position limits increase diversification by approximately 5× while maintaining competitive Sharpe ratios and substantially improving Sortino ratios and drawdown profiles.
 
 ---
 
@@ -99,9 +184,6 @@ integrated-learning-optimization-portfolio-allocation/
 | **cvxpylayers** | Differentiable optimization layers |
 | **pandas** | Data manipulation |
 | **numpy** | Numerical computing |
-
-### Differentiable Optimization
-The optimization layer uses cvxpylayers to make the MV optimization differentiable, enabling gradient-based learning of κ through the optimization problem.
 
 ---
 

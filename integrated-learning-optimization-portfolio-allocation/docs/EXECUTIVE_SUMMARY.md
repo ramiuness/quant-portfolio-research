@@ -33,7 +33,7 @@ The SPO approach implements **Decision-Focused Learning** as described in the re
 
 ### Mean-Variance Optimization Layer
 ```
-maximize:  μᵀw - (κ/2) wᵀΣw
+maximize:  μᵀw - κ wᵀΣw
 subject to: w ≥ 0, 1ᵀw = 1, w ≤ max_weight (optional)
 ```
 
@@ -67,14 +67,14 @@ Where:
 
 ### 1. Learnable Risk Aversion Works
 
-**Synthetic Data Results**:
-- E2E models successfully learn κ ≈ 0.11 (lower than baseline κ=1.0)
-- Learned κ indicates model prefers less risk aversion on synthetic data
-- Decision-focused learning adapts to data characteristics
+The E2E models learn the risk aversion coefficient κ through gradient-based optimization. The learning process starts from a random initialization (κ_init ≈ 1.83) and adapts based on the decision-focused loss.
 
-**Real Data Results**:
-- Learned κ ≈ 0.11 (consistent with synthetic)
-- Performance more nuanced due to market complexity
+**Key Observations**:
+- Decision-focused learning successfully modifies κ during training
+- The learned κ represents a data-driven choice of risk preference
+- Notebooks track κ change (Δ and % change from initial value)
+
+**Note**: Rerun notebooks with epochs=15 and lr=1e-3 to see meaningful κ learning. A cache path bug was fixed to ensure `train_kappa=True` and `train_kappa=False` models use separate cache files.
 
 ### 2. Diversification Constraints Are Effective
 
@@ -188,8 +188,13 @@ The optimization layer uses cvxpylayers to make the MV optimization differentiab
 **Technical validation:**
 - Covariance updates working correctly
 - Diversification constraints enforced
-- Learnable parameters converging
+- Cache path collision fixed (separate files for `train_kappa=True/False`)
 - Cross-validation on synthetic vs real data
+
+**Training configuration:**
+- Epochs per rolling window: 15
+- Learning rate: 1e-3
+- Initial κ: ~1.83 (random initialization)
 
 **Reproducibility:**
 - All code documented in notebooks

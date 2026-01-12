@@ -140,7 +140,9 @@ Metrics evaluated: Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Turnover, and 
 
 ### Learnable Risk Aversion
 
-The E2E models learn κ through gradient-based optimization during training. The learned κ value represents a data-driven choice of risk aversion, removing the need for manual tuning or grid search.
+The E2E models learn κ through gradient-based optimization during training (starting from κ_init ≈ 1.83). The learned κ value represents a data-driven choice of risk aversion, removing the need for manual tuning or grid search.
+
+**Training Configuration**: epochs=15, lr=1e-3 per rolling window. Notebooks display change tracking (Δ and % change from initial κ).
 
 ### Diversification Constraints
 
@@ -221,7 +223,10 @@ See `references/` directory for full papers:
 ### Recent Updates (January 2025)
 - **Bug Fix**: Resolved cache path collision for `base_mv` models with different `train_kappa` settings. Models now use distinct cache files (`_TrainKappaTrue` / `_TrainKappaFalse`).
 - **Learning Rate**: Increased from `1e-4` to `1e-3` to improve κ learning convergence within rolling windows.
+- **Epochs**: Increased from 5 to 15 per rolling window for meaningful κ learning.
 - **Visualization**: Split cumulative wealth comparison into separate plots for individual commentary.
+- **Kappa Tracking**: Added change tracking (Δ and % change) for learned κ values.
+- **Section 5.1**: Separated kappa sensitivity analysis into independent section (run optionally).
 
 ---
 

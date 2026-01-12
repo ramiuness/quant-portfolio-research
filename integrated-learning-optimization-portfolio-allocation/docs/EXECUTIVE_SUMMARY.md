@@ -76,6 +76,8 @@ The E2E models learn the risk aversion coefficient κ through gradient-based opt
 
 **Note**: Rerun notebooks with epochs=15 and lr=1e-3 to see meaningful κ learning. A cache path bug was fixed to ensure `train_kappa=True` and `train_kappa=False` models use separate cache files.
 
+**Initial κ**: Randomly sampled from uniform(0.01, 2.0) when `train_kappa=True`. The `kappa_init` attribute stores this value for tracking learning progress.
+
 ### 2. Diversification Constraints Are Effective
 
 | Model | Effective Holdings | Max Weight |

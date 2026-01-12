@@ -142,7 +142,7 @@ Metrics evaluated: Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Turnover, and 
 
 The E2E models learn κ through gradient-based optimization during training (starting from κ_init ≈ 1.83). The learned κ value represents a data-driven choice of risk aversion, removing the need for manual tuning or grid search.
 
-**Training Configuration**: epochs=15, lr=1e-3 per rolling window. Notebooks display change tracking (Δ and % change from initial κ).
+**Training Configuration**: epochs=15, lr=1e-3 per rolling window. Initial κ is randomly sampled from uniform(0.01, 2.0) and stored in `kappa_init` attribute. Notebooks display change tracking (Δ and % change from initial κ).
 
 ### Diversification Constraints
 

@@ -6,6 +6,8 @@
 # Keep directory structure visible, but exclude content
 **/docs/
 !**/docs/EXECUTIVE_SUMMARY.md
+!**/docs/SR11-7_COMPLIANCE_MAPPING.md
+!docs/SR11-7_COMPLIANCE_MAPPING.md
 **/tests/
 **/*.jl
 **/*.R
@@ -64,6 +66,12 @@ Manifest.toml
 
 # R history
 .Rhistory
+
+# ============================================================================
+# Model Cache Files
+# ============================================================================
+**/cache/
+cache/
 
 # ============================================================================
 # Python

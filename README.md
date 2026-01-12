@@ -116,6 +116,25 @@ Additional validation studies in quantitative modeling are currently in developm
 
 ---
 
+## 📋 Regulatory Alignment
+
+### SR 11-7 Compliance Mapping
+→ [docs/SR11-7_COMPLIANCE_MAPPING.md](docs/SR11-7_COMPLIANCE_MAPPING.md)
+
+This framework aligns with **SR 11-7: Guidance on Model Risk Management** (Federal Reserve, 2011) and related regulatory expectations:
+
+| SR 11-7 Component | Framework Implementation |
+|-------------------|-------------------------|
+| **Model Development** | Clear purpose, theoretical foundation, comprehensive documentation |
+| **Conceptual Soundness** | Academic literature alignment, peer-reviewed methodologies |
+| **Ongoing Monitoring** | Rolling window backtesting, benchmark comparisons |
+| **Outcomes Analysis** | Forecast accuracy metrics, cumulative performance tracking |
+| **Governance** | Model inventory, reproducibility standards, limitation disclosure |
+
+Additional frameworks addressed: OCC 2011-12, BCBS 239, CCAR/DFAST alignment.
+
+---
+
 ## 🔬 Validation Methodology
 
 ### Common Framework Across Projects

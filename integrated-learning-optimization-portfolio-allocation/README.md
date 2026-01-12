@@ -132,16 +132,15 @@ Metrics evaluated: Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Turnover, and 
 
 | Metric | Synthetic Data | Real Data |
 |--------|---------------|-----------|
-| Best Sharpe | PO-MV-Constrained (0.85) | EW Benchmark (0.14) |
-| Learned κ | 0.11 (less risk-averse) | 0.11 (consistent) |
+| Best Sharpe | PO-MV-Constrained | EW Benchmark |
 | SPO vs PO | Comparable performance | No clear advantage |
-| Constraint benefit | +80% Sortino improvement | -8% drawdown reduction |
+| Constraint benefit | Improved Sortino | Reduced drawdowns |
 
 **Interpretation**: On synthetic data where the factor model specification is correct, all optimization approaches dominate the naive benchmark. On real data, the equal-weight portfolio's implicit diversification proves remarkably robust—a result that underscores the gap between theoretical optimality and empirical performance.
 
 ### Learnable Risk Aversion
 
-The E2E models successfully learn κ ≈ 0.11 across both environments, significantly lower than the baseline κ=1.0. This indicates the model prefers less aggressive risk penalization, adapting to data characteristics without manual tuning.
+The E2E models learn κ through gradient-based optimization during training. The learned κ value represents a data-driven choice of risk aversion, removing the need for manual tuning or grid search.
 
 ### Diversification Constraints
 
@@ -218,6 +217,11 @@ See `references/` directory for full papers:
 - Rolling window backtesting
 - Performance comparison and analysis
 - Documentation and figure extraction
+
+### Recent Updates (January 2025)
+- **Bug Fix**: Resolved cache path collision for `base_mv` models with different `train_kappa` settings. Models now use distinct cache files (`_TrainKappaTrue` / `_TrainKappaFalse`).
+- **Learning Rate**: Increased from `1e-4` to `1e-3` to improve κ learning convergence within rolling windows.
+- **Visualization**: Split cumulative wealth comparison into separate plots for individual commentary.
 
 ---
 

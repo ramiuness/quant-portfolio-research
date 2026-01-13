@@ -128,33 +128,41 @@ Metrics evaluated: Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Turnover, and 
 
 ## Key Findings
 
-### Performance Summary (Real Market Data 2000-2025)
+### Synthetic Data (Calibrated, 665 observations)
 
-| Model | Ann. Return | Sharpe | Sortino | Max Drawdown | Turnover | Eff. Holdings |
-|-------|-------------|--------|---------|--------------|----------|---------------|
+| Model | Ann. Return | Sharpe | Sortino | Max DD | Turnover | Eff. Holdings |
+|-------|-------------|--------|---------|--------|----------|---------------|
+| **EW** | 22.13% | 2.31 | 3.90 | -8.80% | 0.00 | 20.0 |
+| **PO-MV** | 133.22% | **9.40** | 11.97 | -6.70% | 95.36 | 1.1 |
+| **PO-MV-Constr** | 87.39% | 8.36 | **18.32** | **-4.68%** | 75.27 | 5.0 |
+| **SPO-MV** | 124.58% | 8.54 | 12.51 | -8.23% | 91.23 | 1.2 |
+| **SPO-MV-Constr** | 77.42% | 7.15 | 13.98 | -4.78% | **64.91** | 5.1 |
+
+**Key Insights (Synthetic)**: All optimized models dramatically outperform EW (Sharpe 7-9 vs 2.3). PO-MV achieves best Sharpe (9.40) when model assumptions hold. Learned κ: 2.74 (+50% from initial).
+
+### Real Market Data (2000-2025, ~1,325 observations)
+
+| Model | Ann. Return | Sharpe | Sortino | Max DD | Turnover | Eff. Holdings |
+|-------|-------------|--------|---------|--------|----------|---------------|
 | **EW** | 16.67% | **1.06** | 1.25 | -30.42% | 0.00 | 20.0 |
 | **PO-MV** | 26.16% | 0.94 | **1.47** | -44.68% | 87.07 | 1.7 |
 | **PO-MV-Constr** | 17.51% | 0.85 | 1.14 | -35.31% | 70.30 | 5.2 |
 | **SPO-MV** | 17.53% | 0.88 | 1.35 | -34.19% | 61.98 | 2.7 |
 | **SPO-MV-Constr** | 17.00% | 0.98 | 1.27 | **-30.10%** | **26.86** | 5.3 |
 
-**Key Insights**:
-- **Best Sharpe**: EW (1.06), but SPO models achieve better Sortino ratios (1.27-1.35 vs 1.25)
-- **Best among optimized**: SPO-MV-Constr (0.98 Sharpe, lowest drawdown, lowest turnover)
-- **Learned κ**: 4.0 (from initial 1.83, +118% change) - model learned higher risk aversion
+**Key Insights (Real)**: EW achieves best Sharpe (1.06), but SPO models achieve better Sortino (1.27-1.35 vs 1.25). SPO-MV-Constr has lowest turnover (26.86) and best drawdown (-30.10%). Learned κ: 4.0 (+118% from initial).
 
-### Learnable Risk Aversion
+### Cross-Environment Comparison
 
-The SPO models successfully learn κ through gradient-based optimization, adapting risk preferences to market conditions. The learned value (κ=4.0) represents a data-driven choice that removes the need for manual tuning.
+| Metric | Synthetic | Real |
+|--------|-----------|------|
+| Best Sharpe | PO-MV (9.40) | EW (1.06) |
+| PO vs SPO | PO slightly better | SPO better Sortino/drawdown |
+| Learned κ | 2.74 (+50%) | 4.00 (+118%) |
 
 ### Diversification Constraints
 
-| Configuration | Effective Holdings | Max Drawdown | Turnover |
-|--------------|-------------------|--------------|----------|
-| Unconstrained | ~1.7-2.7 assets | -34% to -45% | 62-87 |
-| Constrained (20%) | ~5.2-5.3 assets | -30% to -35% | 27-70 |
-
-Position limits increase diversification by ~2-3x while substantially improving drawdown profiles and reducing turnover.
+Position limits (`max_weight=20%`) increase effective holdings from ~1 to ~5 assets while improving drawdowns and reducing turnover on both datasets.
 
 ---
 

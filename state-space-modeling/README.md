@@ -146,7 +146,6 @@ state-space-modeling/
 |----------|---------|
 | **R** | Data import, SSM estimation (KFAS, pomp) |
 | **Julia** | Portfolio optimization (JuMP, HiGHS) |
-| **Python** | MV implementation for numerical validation |
 
 ### Key Packages
 
@@ -158,7 +157,7 @@ state-space-modeling/
 | tidyquant | R | Financial data download |
 
 ### Integration Pattern
-File-based (CSV) data exchange between R, Julia, and Python components.
+File-based (CSV) data exchange between R and Julia components.
 
 ---
 
@@ -191,7 +190,6 @@ File-based (CSV) data exchange between R, Julia, and Python components.
 2. **SSM Estimation** - Gaussian (Kalman) and Student-t (particle) filters fitted
 3. **Portfolio Allocation** - 4 methods × 3 scenarios = 12 strategies + benchmark
 4. **Backtest Validation** - Rolling window out-of-sample evaluation
-5. **Multi-Language Validation** - Julia/Python numerical agreement confirmed
 
 ---
 

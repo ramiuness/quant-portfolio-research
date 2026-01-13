@@ -56,7 +56,7 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - **Additional parameter**: Estimated degrees of freedom (ν)
 
 ### Phase 3: Portfolio Allocation
-- **Languages**: Julia (all 4 models) + Python (MV cross-validation)
+- **Implementation**: Julia (JuMP + HiGHS solver)
 - **Scenarios**: Run each allocation method on all 3 filtered datasets (raw, Gaussian, Student-t)
 - **Metrics**: Sharpe Ratio, Maximum Drawdown, Cumulative Wealth, Turnover
 
@@ -147,13 +147,6 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - **Insight**: Built-in robustness reduces need for preprocessing
 - **Performance**: Comparable across all scenarios
 
-### 4. Multi-Language Validation
-
-**Julia vs. Python (MV comparison):**
-- ✅ Results converged within numerical tolerance
-- Julia implementation: ~10x faster for optimization
-- Python implementation: Easier prototyping and validation
-
 ---
 
 ## Strategic Recommendations
@@ -195,11 +188,6 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - Lower turnover → reduced transaction costs
 - **Benefit**: Filtering can improve net returns even if gross returns are similar
 
-### 4. Cross-Language Consistency is Critical
-- Julia and Python MV implementations produced identical results
-- Validates correctness of both implementations
-- Multi-language approach combines Julia's speed with Python's ecosystem
-
 ---
 
 ## Validation Status
@@ -207,18 +195,16 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 ✅ **All phases complete:**
 - SSM estimation and filtering successful
 - Portfolio allocation across 3 scenarios complete
-- Multi-language validation confirmed
 
 ✅ **Technical validation:**
 - Kalman filter (KFAS) converged for Gaussian SSM
 - Particle filter (pomp) converged for Student-t SSM
 - All allocation models satisfied constraints
-- Numerical precision verified across Julia/Python
 
 ✅ **Reproducibility:**
 - All code and data processing documented
 - Seeds specified for stochastic filtering (Student-t SSM)
-- CSV-based integration between R, Julia, and Python
+- CSV-based integration between R and Julia
 - Full methodology transparency
 
 ---
@@ -260,7 +246,6 @@ This validation study demonstrates that:
 2. **Student-t SSM filtering** provides superior robustness during volatile periods and tail-risk events
 3. **Gaussian SSM filtering** works well for stable markets and noise reduction
 4. **Allocation method matters**: CVaR benefits most from filtering, while MVEU needs it least
-5. **Multi-language validation** confirms implementation correctness and leverages each language's strengths
 
 **Bottom Line**: State-space filtering is a valuable preprocessing step for portfolio allocation, particularly when:
 - Market data exhibits high noise-to-signal ratio

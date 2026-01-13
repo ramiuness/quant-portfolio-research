@@ -128,30 +128,33 @@ Metrics evaluated: Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Turnover, and 
 
 ## Key Findings
 
-### Cross-Environment Comparison
+### Performance Summary (Real Market Data 2000-2025)
 
-| Metric | Synthetic Data | Real Data |
-|--------|---------------|-----------|
-| Best Sharpe | PO-MV-Constrained | EW Benchmark |
-| SPO vs PO | Comparable performance | No clear advantage |
-| Constraint benefit | Improved Sortino | Reduced drawdowns |
+| Model | Ann. Return | Sharpe | Sortino | Max Drawdown | Turnover | Eff. Holdings |
+|-------|-------------|--------|---------|--------------|----------|---------------|
+| **EW** | 16.67% | **1.06** | 1.25 | -30.42% | 0.00 | 20.0 |
+| **PO-MV** | 26.16% | 0.94 | **1.47** | -44.68% | 87.07 | 1.7 |
+| **PO-MV-Constr** | 17.51% | 0.85 | 1.14 | -35.31% | 70.30 | 5.2 |
+| **SPO-MV** | 17.53% | 0.88 | 1.35 | -34.19% | 61.98 | 2.7 |
+| **SPO-MV-Constr** | 17.00% | 0.98 | 1.27 | **-30.10%** | **26.86** | 5.3 |
 
-**Interpretation**: On synthetic data where the factor model specification is correct, all optimization approaches dominate the naive benchmark. On real data, the equal-weight portfolio's implicit diversification proves remarkably robust—a result that underscores the gap between theoretical optimality and empirical performance.
+**Key Insights**:
+- **Best Sharpe**: EW (1.06), but SPO models achieve better Sortino ratios (1.27-1.35 vs 1.25)
+- **Best among optimized**: SPO-MV-Constr (0.98 Sharpe, lowest drawdown, lowest turnover)
+- **Learned κ**: 4.0 (from initial 1.83, +118% change) - model learned higher risk aversion
 
 ### Learnable Risk Aversion
 
-The SPO models learn κ through gradient-based optimization during training (starting from κ_init ≈ 1.83). The learned κ value represents a data-driven choice of risk aversion, removing the need for manual tuning or grid search.
-
-**Training Configuration**: epochs=10, lr=1e-3, kappa_lr=0.1 per rolling window. Initial κ is randomly sampled from uniform(0.01, 2.0) and stored in `kappa_init` attribute. Notebooks display change tracking (Δ and % change from initial κ).
+The SPO models successfully learn κ through gradient-based optimization, adapting risk preferences to market conditions. The learned value (κ=4.0) represents a data-driven choice that removes the need for manual tuning.
 
 ### Diversification Constraints
 
-| Configuration | Effective Holdings | Max Weight | Trade-off |
-|--------------|-------------------|------------|-----------|
-| Unconstrained | ~1-2 assets | 100% | Higher concentration risk |
-| Constrained (20%) | ~5 assets | 20% | Better risk-adjusted returns |
+| Configuration | Effective Holdings | Max Drawdown | Turnover |
+|--------------|-------------------|--------------|----------|
+| Unconstrained | ~1.7-2.7 assets | -34% to -45% | 62-87 |
+| Constrained (20%) | ~5.2-5.3 assets | -30% to -35% | 27-70 |
 
-Position limits increase diversification by approximately 5× while maintaining competitive Sharpe ratios and substantially improving Sortino ratios and drawdown profiles.
+Position limits increase diversification by ~2-3x while substantially improving drawdown profiles and reducing turnover.
 
 ---
 

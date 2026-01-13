@@ -1,13 +1,19 @@
 # State-Space Modeling for Asset Allocation
 
-A comprehensive validation study of state-space models (SSM) for filtering financial time series and their impact on portfolio allocation performance.
+A validation study of state-space models (SSM) for filtering financial time series and their impact on portfolio allocation performance.
 
 ## Overview
 
 This project evaluates whether filtering financial returns through state-space models improves two-asset portfolio allocation compared to using raw (unfiltered) data.
 
+### Quick Finding
+**Student-t SSM filtering + Omega ratio** achieved the highest returns, outperforming raw data by ~93%. See the [Executive Summary](docs/EXECUTIVE_SUMMARY.md) for detailed quantitative results.
+
 ### Research Question
 **Does state-space filtering improve portfolio allocation performance?**
+
+### Evaluation Pipeline
+1. **Data Collection** → 2. **SSM Filtering** → 3. **Forecast Evaluation** → 4. **Portfolio Allocation** → 5. **Backtest Validation**
 
 Compare allocation results using:
 1. **Raw returns** (no filtering)
@@ -32,6 +38,7 @@ Compare allocation results using:
 → [docs/EXECUTIVE_SUMMARY.md](docs/EXECUTIVE_SUMMARY.md)
 - High-level findings and recommendations
 - SSM filtering effectiveness analysis
+- Quantitative performance tables (forecast metrics, allocation results)
 - Model comparison insights
 - Ideal for stakeholders and decision-makers
 
@@ -41,7 +48,7 @@ Compare allocation results using:
 
 ---
 
-## Key Methodology
+## Methodology
 
 ### Phase 1: Data Import & Preparation
 - Download TSX index prices and Canadian T-bill rates
@@ -163,14 +170,23 @@ File-based (CSV) data exchange between R, Julia, and Python components
 
 ### Key Results
 
+| Strategy | Scenario | Avg Return | Avg Sharpe |
+|----------|----------|------------|------------|
+| **Omega** | Student-t | **0.000345** | 0.70 |
+| EqualWeight | Student-t | 0.000210 | 0.84 |
+| MV | Student-t | 0.000122 | **34.69** |
+| CVaR | Student-t | 0.000123 | 10.11 |
+
+*Top performing strategies from 15 evaluated (5 methods × 3 scenarios)*
+
 **SSM Filtering Effectiveness:**
 - Student-t SSM: Superior during volatile periods (~20% drawdown reduction with CVaR)
 - Gaussian SSM: Effective noise reduction for stable markets
 - Raw returns: Competitive in low-volatility regimes
 
 **Best Allocation Combinations:**
-1. CVaR + Student-t filtering (tail-risk management)
-2. Omega + Gaussian filtering (risk-adjusted returns)
+1. Omega + Student-t filtering (highest returns)
+2. CVaR + Student-t filtering (tail-risk management)
 3. MVBU + any scenario (built-in robustness reduces filtering dependency)
 
 **Multi-Language Validation:**

@@ -146,7 +146,7 @@ state-space-modeling/
 |----------|---------|
 | **R** | Data import, SSM estimation (KFAS, pomp) |
 | **Julia** | Portfolio optimization (JuMP, HiGHS) |
-| **Python** | Cross-validation (scipy.optimize) |
+| **Python** | MV implementation for numerical validation |
 
 ### Key Packages
 

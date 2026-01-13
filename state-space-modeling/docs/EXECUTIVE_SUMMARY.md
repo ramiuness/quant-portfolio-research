@@ -4,15 +4,14 @@
 
 This report presents a validation study evaluating whether **state-space model (SSM) filtering** of financial returns improves portfolio allocation performance compared to using raw, unfiltered data.
 
+### Research Question
+**Does filtering financial returns through state-space models improve portfolio allocation performance?**
+
 ### Evaluation Pipeline
 1. **Data Collection**: Download TSX index prices (Yahoo Finance) and Canadian T-bill rates (FRED/Bank of Canada); compute log returns
 2. **SSM Filtering**: Estimate Gaussian AR(1) SSM via Kalman filter (R/KFAS) and Student-t AR(1) SSM via particle filter (R/pomp); extract filtered states
-3. **Forecast Evaluation**: Rolling 252-day estimation windows with 5-day ahead AR(1) forecasts; compare MAE, RMSE, bias, and directional accuracy across raw vs. filtered returns
-4. **Portfolio Allocation**: Apply 4 optimization methods (MV, CVaR, Omega, MVBU) to each data source using 63-day rolling windows in Julia
-5. **Backtest Validation**: Compute out-of-sample wealth growth, Sharpe ratios, and drawdowns; benchmark against equal-weight (50/50) portfolio
-
-### Research Question
-**Does filtering financial returns through state-space models improve portfolio allocation performance?**
+3. **Portfolio Allocation**: Apply 4 optimization methods (MV, CVaR, Omega, MVEU) to each data source using 63-day rolling windows in Julia
+4. **Backtest Validation**: Compute out-of-sample wealth growth, Sharpe ratios, and drawdowns; benchmark against equal-weight (50/50) portfolio
 
 ### Three Filtering Scenarios Compared
 1. **Raw returns** (no filtering) - Baseline
@@ -27,7 +26,7 @@ This report presents a validation study evaluating whether **state-space model (
 1. **Mean-Variance (MV)** - Classical Markowitz optimization
 2. **CVaR** - Conditional Value-at-Risk minimization
 3. **Omega Ratio** - Threshold-based optimization
-4. **MVBU** - Mean-Variance with Box Uncertainty (Robust)
+4. **MVEU** - Mean-Variance with Ellipsoid Uncertainty (Robust)
 
 **Status**: ✅ Complete (January 2025)
 
@@ -39,10 +38,6 @@ This report presents a validation study evaluating whether **state-space model (
 - **Source**: Yahoo Finance (TSX index), Bank of Canada (T-bill rates)
 - **Period**: 2015-01-01 to present
 - **Processing**: Log returns for TSX, annualized rates converted to period returns
-
-![Forecast Metrics](../outputs/figures/validation_forecast_metrics.png)
-*Figure: Returns distribution of the TSX index*
-
 
 ### Phase 2: State-Space Model Estimation
 
@@ -60,13 +55,7 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - **Implementation**: R/pomp package (particle filter)
 - **Additional parameter**: Estimated degrees of freedom (ν)
 
-### Phase 3: Forecast Comparison
-- **Horizon**: 5-day ahead forecasts
-- **Method**: Rolling window evaluation
-- **Metrics**: MAE, RMSE, Bias, Hit Rate, Directional Accuracy
-- **Goal**: Assess whether SSM filtering improves out-of-sample predictability
-
-### Phase 4: Portfolio Allocation
+### Phase 3: Portfolio Allocation
 - **Languages**: Julia (all 4 models) + Python (MV cross-validation)
 - **Scenarios**: Run each allocation method on all 3 filtered datasets (raw, Gaussian, Student-t)
 - **Metrics**: Sharpe Ratio, Maximum Drawdown, Cumulative Wealth, Turnover
@@ -77,42 +66,18 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 
 ### 1. SSM Filtering Effectiveness
 
-**Forecast Accuracy:**
-- SSM filtering (both Gaussian and Student-t) improved forecast metrics compared to raw returns
-- **Student-t SSM** showed superior robustness during high-volatility periods
-- **Directional accuracy** increased by filtering noise from raw returns
-
-| Data Source | MAE | RMSE | Bias | Hit Rate | Dir. Accuracy |
-|-------------|-----|------|------|----------|---------------|
-| **Raw** | 0.00582 | 0.00691 | 0.000099 | 51.7% | **75.5%** |
-| **Gaussian** | 0.00582 | 0.00690 | 0.000308 | 51.3% | 57.1% |
-| **Student-t** | **0.00579** | **0.00686** | **0.000008** | **56.2%** | 53.4% |
-
-*Table: Forecast accuracy metrics averaged across 38 rolling windows (252-day estimation, 5-day forecast horizon)*
-
-
-
-
-
 **State Estimation:**
 - Gaussian SSM: Smooth filtered states with reduced noise
 - Student-t SSM: More adaptive to outliers and regime changes
 - Both models successfully decomposed returns into signal (state) and noise (observation error)
 
-
 ![Filtered Returns Comparison](../outputs/figures/validation_allocation_mv_comparison.png)
 *Figure: Comparison of raw vs SSM-filtered returns*
 
-
-
-
-
-
 ### 2. Allocation Performance by Scenario
 
-
 ![Filtered Returns Comparison](../outputs/figures/validation_allocation_omega_comparison.png)
-*Figure: Out-of-Sample Mean Return of by Model and Filter*
+*Figure: Out-of-Sample Mean Return by Model and Filter*
 
 ![Combined Comparison](../outputs/figures/julia_combined_comparison.png)
 *Figure: Wealth Growth by Model and Filter*
@@ -147,9 +112,6 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 - Most stable weight allocation
 - Superior downside protection (lower max drawdown)
 
-
-
-
 ### 3. Model-Specific Insights
 
 **Mean-Variance (MV):**
@@ -172,17 +134,15 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 
 **Key Finding**: Student-t filtering yields the highest average return (+93% vs. unfiltered), validating its effectiveness for tail-heavy financial data.
 
-
 ![Risk Return Profiles](../outputs/figures/julia_allocation_weights_student_t.png)
 *Figure: Risk-Return Profile by Strategy*
-
 
 **Omega Ratio:**
 - **Best with**: Gaussian filtering
 - **Improvement**: Higher Sharpe ratio due to reduced noise
 - **Note**: Less sensitive to outliers than CVaR
 
-**MVBU (Robust):**
+**MVEU (Robust):**
 - **Best with**: Raw or lightly filtered returns
 - **Insight**: Built-in robustness reduces need for preprocessing
 - **Performance**: Comparable across all scenarios
@@ -214,7 +174,7 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 | **Risk-averse** | CVaR | Student-t SSM |
 | **Return-focused** | Omega | Gaussian SSM |
 | **Balanced** | MV | Gaussian SSM |
-| **Robust/Institutional** | MVBU | Raw or minimal filtering |
+| **Robust/Institutional** | MVEU | Raw or minimal filtering |
 
 ---
 
@@ -246,7 +206,6 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 
 ✅ **All phases complete:**
 - SSM estimation and filtering successful
-- Forecast comparison analysis complete
 - Portfolio allocation across 3 scenarios complete
 - Multi-language validation confirmed
 
@@ -300,7 +259,7 @@ This validation study demonstrates that:
 1. **SSM filtering can improve portfolio allocation**, but benefits depend on market regime and allocation method
 2. **Student-t SSM filtering** provides superior robustness during volatile periods and tail-risk events
 3. **Gaussian SSM filtering** works well for stable markets and noise reduction
-4. **Allocation method matters**: CVaR benefits most from filtering, while MVBU needs it least
+4. **Allocation method matters**: CVaR benefits most from filtering, while MVEU needs it least
 5. **Multi-language validation** confirms implementation correctness and leverages each language's strengths
 
 **Bottom Line**: State-space filtering is a valuable preprocessing step for portfolio allocation, particularly when:
@@ -310,9 +269,6 @@ This validation study demonstrates that:
 - Transaction costs incentivize stable, low-turnover strategies
 
 However, filtering is not a panacea—it must be applied judiciously based on market conditions and investor objectives.
-
-![Validation Summary](../outputs/figures/validation_summary.png)
-*Figure: Summary of validation results across all scenarios and methods*
 
 ---
 

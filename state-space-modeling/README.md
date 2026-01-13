@@ -1,93 +1,118 @@
 # State-Space Modeling for Asset Allocation
 
-A validation study of state-space models (SSM) for filtering financial time series and their impact on portfolio allocation performance.
+A validation study evaluating whether **state-space model (SSM) filtering** of financial returns improves portfolio allocation performance compared to using raw, unfiltered data.
 
 ## Overview
 
-This project evaluates whether filtering financial returns through state-space models improves two-asset portfolio allocation compared to using raw (unfiltered) data.
+This project compares portfolio allocation outcomes when using raw (unfiltered) returns versus returns filtered through two state-space models:
 
-### Quick Finding
-**Student-t SSM filtering + Omega ratio** achieved the highest returns, outperforming raw data by ~93%. See the [Executive Summary](docs/EXECUTIVE_SUMMARY.md) for detailed quantitative results.
+1. **Gaussian AR(1) SSM** - Standard Kalman filtering assuming normally distributed innovations
+2. **Student-t AR(1) SSM** - Particle filtering with heavy-tailed innovations, robust to outliers
 
-### Research Question
-**Does state-space filtering improve portfolio allocation performance?**
-
-### Evaluation Pipeline
-1. **Data Collection** → 2. **SSM Filtering** → 3. **Forecast Evaluation** → 4. **Portfolio Allocation** → 5. **Backtest Validation**
-
-Compare allocation results using:
-1. **Raw returns** (no filtering)
-2. **Gaussian AR(1) SSM** filtered returns
-3. **Student-t AR(1) SSM** filtered returns (robust to outliers)
-
-### Asset Universe
-- **TSX Composite Index** (^GSPTSE) - Canadian equity market
-- **Canadian 3-Month T-Bills** - Risk-free asset
-
-### Allocation Methods Evaluated
-1. **Mean-Variance (MV)** - Classical Markowitz optimization
-2. **CVaR** - Conditional Value-at-Risk minimization
-3. **Omega Ratio** - Threshold-based optimization
-4. **MVBU** - Mean-Variance with Box Uncertainty (Robust)
+The filtered returns are fed into 4 portfolio optimization methods, and out-of-sample performance is evaluated via rolling-window backtesting. The study tests whether the signal-noise decomposition provided by SSM filtering translates to improved allocation decisions.
 
 ---
 
-## 📊 View the Results
+## Research Question
 
-### Executive Summary (Recommended Starting Point)
-→ [docs/EXECUTIVE_SUMMARY.md](docs/EXECUTIVE_SUMMARY.md)
-- High-level findings and recommendations
-- SSM filtering effectiveness analysis
-- Quantitative performance tables (forecast metrics, allocation results)
-- Model comparison insights
-- Ideal for stakeholders and decision-makers
+**Does preprocessing financial returns through state-space filtering improve portfolio allocation performance?**
 
-### Analysis Reports
-- Jupyter notebooks and R markdown files available in `outputs/reports/`
-- **Note**: Clone the repository to view full analysis locally
+This study investigates:
+1. Whether SSM filtering improves allocation returns vs. raw data
+2. How Gaussian vs. Student-t filtering compare under different market conditions
+3. Which allocation methods benefit most from filtering
+4. The filtering-turnover trade-off
 
 ---
 
 ## Methodology
 
-### Phase 1: Data Import & Preparation
-- Download TSX index prices and Canadian T-bill rates
-- Calculate log returns for TSX
-- Convert T-bill annual rates to period returns
-- Time period: 2015-01-01 to present
+### State-Space Model Formulation
 
-### Phase 2: State-Space Model Estimation
-**Gaussian AR(1) SSM:**
+**AR(1) State-Space Structure:**
 ```
-State:       x_t = φ × x_{t-1} + η_t,  η_t ~ N(0, σ²_η)
-Observation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
+State equation:       x_t = φ × x_{t-1} + η_t
+Observation equation: y_t = x_t + ε_t
 ```
 
-**Student-t AR(1) SSM:**
-- Same structure as Gaussian
-- Robust to outliers via Student-t innovations
-- Estimated degrees of freedom
+Where `x_t` is the latent "true" return signal and `y_t` is the observed noisy return.
 
-**Implementation:**
-- Gaussian: R/KFAS package (Kalman filter)
-- Student-t: R/pomp package (particle filter)
+### Filtering Approaches
 
-### Phase 3: Forecast Comparison
-Rolling window forecast evaluation:
-- **Metrics**: MAE, RMSE, Bias, Hit Rate, Directional Accuracy
-- **Windows**: 5-day ahead forecasts over full test period
-- **Comparison**: Raw vs. Gaussian-filtered vs. Student-t-filtered
+| Approach | Method | Implementation | Innovation Distribution |
+|----------|--------|----------------|------------------------|
+| **Raw** | None | - | Baseline (no filtering) |
+| **Gaussian** | Kalman Filter | R/KFAS | Normal |
+| **Student-t** | Particle Filter | R/pomp | Heavy-tailed (robust) |
 
-### Phase 4: Portfolio Allocation
-Multi-language implementation:
-- **Julia**: All 4 methods (MV, CVaR, Omega, MVBU)
-- **Python**: Mean-Variance for cross-validation
+### Allocation Methods Evaluated
 
-**Performance Metrics:**
-- Sharpe Ratio
-- Maximum Drawdown
-- Cumulative Wealth
-- Turnover
+| Method | Description | Objective |
+|--------|-------------|-----------|
+| **MV** | Mean-Variance | Minimize variance for target return |
+| **CVaR** | Conditional Value-at-Risk | Minimize tail risk (95% CVaR) |
+| **Omega** | Omega Ratio | Maximize gain-loss ratio |
+| **MVEU** | Mean-Variance Ellipsoid Uncertainty | Robust to estimation error |
+
+### Validation Protocol
+
+- **Rolling windows**: 252-day estimation, 63-day testing, 63-day step
+- **Benchmark**: Equal-weight (50/50) portfolio
+- **Metrics**: Sharpe Ratio, Maximum Drawdown, Cumulative Wealth, Turnover
+- **Total strategies**: 15 (5 methods × 3 scenarios)
+
+---
+
+## Key Findings
+
+### Allocation Performance by Scenario
+
+| Model | Scenario | Avg Return | Avg Std | Avg Sharpe |
+|-------|----------|------------|---------|------------|
+| **Omega** | Student-t | **0.000345** | 0.000511 | 0.70 |
+| EqualWeight | Student-t | 0.000210 | 0.000255 | 0.84 |
+| EqualWeight | Unfiltered | 0.000171 | 0.003812 | 0.09 |
+| MVEU | Student-t | 0.000124 | 0.000088 | 3.82 |
+| CVaR | Student-t | 0.000123 | 0.000085 | 10.11 |
+| MV | Student-t | 0.000122 | 0.000084 | **34.69** |
+
+*Top strategies from 15 evaluated (5 methods × 3 scenarios)*
+
+### Cross-Scenario Comparison
+
+| Metric | Unfiltered | Gaussian | Student-t |
+|--------|------------|----------|-----------|
+| **Avg Return** | 0.000096 | 0.000088 | **0.000185** |
+| **Avg Sharpe** | 24.64 | 57.74 | 12.35 |
+| **Strategies > Benchmark** | 4/4 | 4/4 | 4/4 |
+
+*Averaged across 4 optimization methods, excluding EqualWeight*
+
+**Key Result**: Student-t filtering yields +93% higher average return vs. unfiltered data.
+
+### Best Combinations
+
+| Investor Profile | Recommended Model | Filtering Method |
+|-----------------|------------------|------------------|
+| **Risk-averse** | CVaR | Student-t SSM |
+| **Return-focused** | Omega | Student-t SSM |
+| **Balanced** | MV | Gaussian SSM |
+| **Robust/Institutional** | MVEU | Raw or minimal |
+
+---
+
+## View the Results
+
+### Executive Summary (Recommended Starting Point)
+→ [docs/EXECUTIVE_SUMMARY.md](docs/EXECUTIVE_SUMMARY.md)
+- Performance comparison tables
+- Model-specific insights
+- Strategic recommendations
+- Limitations and future work
+
+### Analysis Reports
+- R markdown and Julia notebooks in `outputs/reports/`
+- Clone repository to view full analysis locally
 
 ---
 
@@ -96,112 +121,52 @@ Multi-language implementation:
 ```
 state-space-modeling/
 ├── README.md                    # This file
-├── src/                         # Source code (API only)
-│   └── README.md                # Public API documentation
-├── outputs/
-│   ├── reports/                 # Analysis reports (HTML excluded)
-│   └── data/                    # Summary statistics and results
-├── data/                        # Sample data (full data excluded)
-│   ├── raw/                     # TSX + T-bill sample data
-│   ├── filtered/                # SSM filtered outputs (sample)
-│   └── comparison/              # Forecast comparison results
 ├── docs/
-│   └── EXECUTIVE_SUMMARY.md     # High-level findings (public)
-└── tests/                       # Test suite (structure only)
+│   └── EXECUTIVE_SUMMARY.md     # High-level findings
+├── src/
+│   └── README.md                # API documentation
+├── outputs/
+│   ├── reports/                 # Analysis reports
+│   ├── figures/                 # Visualizations
+│   └── data/                    # Summary statistics
+├── data/
+│   ├── raw/                     # TSX + T-bill data
+│   ├── filtered/                # SSM filtered outputs
+│   └── allocation/              # Allocation results
+└── tests/                       # Test suite
 ```
-
-**Note**: Source code (R, Julia, Python scripts) and full datasets are excluded from the repository. API documentation and summary results are provided for reproducibility reference.
 
 ---
 
 ## Technical Stack
 
 ### Languages & Tools
-- **R**: Data import, SSM estimation (KFAS, pomp), forecast comparison
-- **Julia**: Portfolio optimization (JuMP, Ipopt)
-- **Python**: Cross-validation allocation (scipy.optimize)
+
+| Language | Purpose |
+|----------|---------|
+| **R** | Data import, SSM estimation (KFAS, pomp) |
+| **Julia** | Portfolio optimization (JuMP, HiGHS) |
+| **Python** | Cross-validation (scipy.optimize) |
 
 ### Key Packages
-- **R**: tidyquant, KFAS, pomp, tidyverse
-- **Julia**: JuMP, Ipopt, DataFrames, CSV
-- **Python**: pandas, numpy, scipy
+
+| Package | Language | Purpose |
+|---------|----------|---------|
+| KFAS | R | Kalman filtering for Gaussian SSM |
+| pomp | R | Particle filtering for Student-t SSM |
+| JuMP | Julia | Mathematical optimization |
+| tidyquant | R | Financial data download |
 
 ### Integration Pattern
-File-based (CSV) data exchange between R, Julia, and Python components
+File-based (CSV) data exchange between R, Julia, and Python components.
 
 ---
 
-## Project Status
+## Asset Universe
 
-**Status**: ✅ Complete (January 2025)
-
-### Completed Phases
-
-**Phase 1: Data Import & Preparation** ✅
-- TSX index data downloaded and processed
-- Canadian T-bill rates imported and converted
-- Log returns calculated for modeling
-- Simple returns prepared for allocation
-
-**Phase 2: State-Space Model Estimation** ✅
-- Gaussian AR(1) SSM estimated via Kalman filtering (R/KFAS)
-- Student-t AR(1) SSM estimated via particle filtering (R/pomp)
-- Filtered states exported with both log and simple returns
-- Model parameters and diagnostics validated
-
-**Phase 3: Forecast Comparison** ✅
-- Rolling window 5-day ahead forecasts implemented
-- AR(1) multi-step forecasting methodology applied
-- Metrics: MAE, RMSE, Bias, Hit Rate, Directional Accuracy
-- Statistical tests (Diebold-Mariano) for forecast comparison
-
-**Phase 4: Portfolio Allocation** ✅
-- Julia implementation: 4 optimization methods (MV, CVaR, Omega, MVBU) × 3 scenarios
-- Python implementation: Mean-Variance cross-validation × 3 scenarios
-- Equal-weight (1/N) benchmark computed for all scenarios
-- Total: 15 allocation strategies evaluated
-- Multi-language validation confirmed numerical agreement
-
-**Phase 5: Comparative Validation** ✅
-- Comprehensive validation report synthesizing all results
-- Performance comparison across scenarios and methods
-- Best combination identified: CVaR + Student-t filtering
-- Documentation complete (README, EXECUTIVE_SUMMARY, API docs)
-
-### Key Results
-
-| Strategy | Scenario | Avg Return | Avg Sharpe |
-|----------|----------|------------|------------|
-| **Omega** | Student-t | **0.000345** | 0.70 |
-| EqualWeight | Student-t | 0.000210 | 0.84 |
-| MV | Student-t | 0.000122 | **34.69** |
-| CVaR | Student-t | 0.000123 | 10.11 |
-
-*Top performing strategies from 15 evaluated (5 methods × 3 scenarios)*
-
-**SSM Filtering Effectiveness:**
-- Student-t SSM: Superior during volatile periods (~20% drawdown reduction with CVaR)
-- Gaussian SSM: Effective noise reduction for stable markets
-- Raw returns: Competitive in low-volatility regimes
-
-**Best Allocation Combinations:**
-1. Omega + Student-t filtering (highest returns)
-2. CVaR + Student-t filtering (tail-risk management)
-3. MVBU + any scenario (built-in robustness reduces filtering dependency)
-
-**Multi-Language Validation:**
-- Julia and Python MV implementations: Numerical agreement within 1e-4
-- Validates correctness of both optimization and allocation logic
-- Demonstrates reproducibility across platforms
-
-### Future Extensions
-
-**Potential Enhancements:**
-- Multivariate SSMs for joint asset modeling
-- Regime-switching state-space models
-- Additional allocation methods (Risk Parity, Black-Litterman)
-- Real-time deployment with streaming data
-- Transaction cost integration for net performance analysis
+- **TSX Composite Index** (^GSPTSE) - Canadian equity market
+- **Canadian 3-Month T-Bills** - Risk-free asset proxy
+- **Period**: 2015-01-01 to present
 
 ---
 
@@ -217,29 +182,32 @@ File-based (CSV) data exchange between R, Julia, and Python components
 
 ---
 
-## Design Principles
+## Project Status
 
-### 1. Controlled Comparison
-- Same data, same time periods across all scenarios
-- Consistent allocation methods for fair comparison
-- Rolling window validation for robustness
+**Status**: ✅ Complete (January 2025)
 
-### 2. Multi-Language Validation
-- Cross-validation between Julia and Python implementations
-- Leverages strengths of each language (R for SSM, Julia for optimization)
-
-### 3. Reproducibility
-- Documented methodology
-- Clear data processing pipeline
-- API documentation for replication
+### Completed Phases
+1. **Data Import** - TSX index and T-bill rates downloaded and processed
+2. **SSM Estimation** - Gaussian (Kalman) and Student-t (particle) filters fitted
+3. **Portfolio Allocation** - 4 methods × 3 scenarios = 12 strategies + benchmark
+4. **Backtest Validation** - Rolling window out-of-sample evaluation
+5. **Multi-Language Validation** - Julia/Python numerical agreement confirmed
 
 ---
 
-## Contact
+## Limitations & Future Work
 
-For questions about the methodology or results:
-- Review the [Executive Summary](docs/EXECUTIVE_SUMMARY.md) for key findings
-- Check the API documentation in `src/README.md`
+### Current Limitations
+- **Two-asset universe**: Production systems handle 100-1000+ assets
+- **~10 years data**: Institutional studies use 20-30+ years
+- **No transaction costs**: Net returns would differ
+- **Rolling window only**: No true holdout set
+
+### Future Extensions
+1. Scale to 50-100+ assets with sector constraints
+2. Transaction cost integration
+3. Regime-switching SSM models
+4. True out-of-sample holdout validation
 
 ---
 

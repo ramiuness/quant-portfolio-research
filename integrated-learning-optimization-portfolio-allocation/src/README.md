@@ -88,13 +88,16 @@ e2e = e2e_net(
     opt_layer='base_mv',    # Optimization layer
     pred_model='linear',    # Prediction model type
     pred_loss_factor=0.25,  # Weight for prediction loss
-    epochs=5,               # Training epochs per window
-    lr=1e-4,                # Learning rate
+    epochs=10,              # Training epochs per window
+    lr=1e-3,                # Learning rate (for prediction layer)
+    kappa_lr=0.1,           # Separate LR for kappa (recommended for meaningful learning)
     train_kappa=True,       # Learn risk aversion
     max_weight=None,        # Weight constraint
     set_seed=42             # Random seed
 )
 ```
+
+**Note on Kappa Learning**: Use `kappa_lr=0.1` for meaningful kappa learning (~23% change in 10 epochs vs 0.3% with default lr=1e-3). This separate learning rate addresses the slow convergence of kappa due to small gradients from the cvxpylayers optimization layer.
 
 **Learnable Parameters**:
 - `kappa`: Risk aversion coefficient (when `train_kappa=True`)
@@ -323,7 +326,7 @@ sigma = torch.tensor(Y.train().cov().values, dtype=torch.double)
 
 ew = equal_weight(n_x, n_y, n_obs)
 po = pred_then_opt(n_x, n_y, n_obs, sigma=Y.train().cov(), kappa=1.0)
-e2e = e2e_net(n_x, n_y, n_obs, sigma=sigma, train_kappa=True)
+e2e = e2e_net(n_x, n_y, n_obs, sigma=sigma, train_kappa=True, kappa_lr=0.1)
 
 # Run backtests
 ew.net_roll_test(X, Y, n_roll=4)

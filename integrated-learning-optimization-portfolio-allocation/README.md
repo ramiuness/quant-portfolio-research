@@ -4,13 +4,13 @@ A validation study comparing **Predict-then-Optimize (PO)** and **Smart Predict-
 
 ## Overview
 
-This project presents a comprehensive validation study comparing two paradigms for integrating machine learning with portfolio optimization:
+This project presents a validation study comparing two paradigms for integrating machine learning with portfolio optimization:
 
-1. **Predict-then-Optimize (PO)**: The traditional two-stage approach where a model first predicts expected returns, then a separate optimization step constructs the portfolio treating predictions as given.
+1. **Predict-then-Optimize (PO)**: The traditional two-stage approach where a model first predicts expected returns, then a separate optimization step constructs the portfolio treating predictions as given. This approach follows a sequential learning and optimization paradigm.
 
-2. **Smart Predict-then-Optimize (SPO)**, also known as **Decision-Focused Learning**: An end-to-end approach where the prediction model is trained with direct awareness of the downstream optimization objective, allowing gradients to flow through the portfolio construction step.
+2. **Smart Predict-then-Optimize (SPO)**: An end-to-end approach where the prediction model is trained with direct awareness of the downstream optimization objective, allowing gradients to flow through the portfolio construction step. This approach follows the **Decision-Focused Learning** paradigm.
 
-This work extends the theoretical framework established in *"Distributionally Robust End-to-End Portfolio Construction"* (Costa & Iyengar, Quantitative Finance, 2023), applying decision-focused learning to Mean-Variance optimization with learnable risk aversion.
+This work extends the framework established in *"Distributionally Robust End-to-End Portfolio Construction"* (Costa & Iyengar, Quantitative Finance, 2023). We apply decision-focused learning to Mean-Variance optimization with learnable risk aversion.
 
 The study evaluates whether embedding optimization objectives directly into the learning process—allowing the model to jointly learn prediction parameters and risk preferences—yields superior portfolio outcomes compared to the traditional sequential paradigm.
 
@@ -20,7 +20,7 @@ The study evaluates whether embedding optimization objectives directly into the 
 
 This study investigates several interconnected questions at the intersection of machine learning and portfolio theory:
 
-1. **Decision-Focused vs. Predict-then-Optimize**: Does training the prediction model with awareness of the downstream optimization objective lead to better portfolio decisions than the traditional two-stage approach?
+1. **Decision-Focused vs. Sequential-Learning Optimization**: Does training the prediction model with awareness of the downstream optimization objective lead to better portfolio decisions than the traditional two-stage approach?
 
 2. **Learnable vs. Fixed Risk Preferences**: Can the model discover an optimal risk aversion coefficient (κ) through gradient-based learning, and how does this data-driven parameterization compare to conventional fixed values?
 
@@ -28,7 +28,7 @@ This study investigates several interconnected questions at the intersection of 
 
 4. **Portfolio Concentration Trade-offs**: What is the impact of diversification constraints on risk-adjusted returns? How do constrained portfolios compare to unconstrained solutions in terms of Sharpe ratio, drawdown protection, and effective number of holdings?
 
-5. **Risk Aversion Sensitivity**: How robust are portfolio outcomes to the choice of κ, and does the learned value fall within a stable performance region?
+<!-- 5. **Risk Aversion Sensitivity**: How robust are portfolio outcomes to the choice of κ, and does the learned value fall within a stable performance region? -->
 
 ---
 
@@ -36,7 +36,7 @@ This study investigates several interconnected questions at the intersection of 
 
 ### Factor-Based Return Prediction
 
-Expected asset returns are modeled as linear functions of systematic risk factors, following the Arbitrage Pricing Theory tradition. The feature set comprises **8 Fama-French factors**:
+Expected asset returns are modeled as linear functions of systematic risk factors, following the Arbitrage Pricing Theory tradition. We highligh the fact that the SPO pipeline allows the learning of the returns from the factors using multilayer neural networks. The feature set comprises **8 Fama-French factors**:
 
 | Factor | Description |
 |--------|-------------|
@@ -55,11 +55,11 @@ The prediction model learns factor exposures (β) that map observable factors to
 
 **Predict-then-Optimize (PO)**: The prediction model minimizes forecasting error (MSE) without regard to how predictions will be used. The optimizer then treats these predictions as ground truth.
 
-**Smart Predict-then-Optimize (SPO)**: The prediction model minimizes realized portfolio loss, computed by passing predictions through the optimization layer and evaluating against actual returns. This decision-focused objective aligns learning with the ultimate investment goal.
+**Smart Predict-then-Optimize (SPO)**: The prediction model minimizes realized portfolio loss, computed by passing predictions through the optimization layer and evaluating against actual returns. This decision-focused objective aligns learning with the ultimate investment goal. We consider a loss function that is a combination of MSE a Sharpe ratio loss.
 
 ### Differentiable Optimization Layer
 
-The Mean-Variance optimization problem is embedded as a differentiable layer using cvxpylayers:
+The Mean-Variance optimization problem is embedded into the prediction pipeline as a differentiable layer using cvxpylayers:
 
 ```
 maximize:  μᵀw - κ wᵀΣw
@@ -99,9 +99,9 @@ Metrics evaluated: Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Turnover, and 
 |-------|------|---------------|-------------|
 | **EW** | Benchmark | N/A | Equal weight 1/n |
 | **PO-MV** | Predict-then-Optimize | Fixed κ=1.0 | Unconstrained |
-| **PO-MV-Constrained** | Predict-then-Optimize | Fixed κ=1.0 | max_weight=20% |
-| **E2E-MV-Learned** | Smart Predict-then-Optimize | Learnable κ | Unconstrained |
-| **E2E-MV-Constrained** | Smart Predict-then-Optimize | Learnable κ | max_weight=20% |
+| **PO-MV-Constr** | Predict-then-Optimize | Fixed κ=1.0 | max_weight=20% |
+| **SPO-MV** | Smart Predict-then-Optimize | Learnable κ | Unconstrained |
+| **SPO-MV-Constr** | Smart Predict-then-Optimize | Learnable κ | max_weight=20% |
 
 ---
 
@@ -140,9 +140,9 @@ Metrics evaluated: Sharpe Ratio, Sortino Ratio, Maximum Drawdown, Turnover, and 
 
 ### Learnable Risk Aversion
 
-The E2E models learn κ through gradient-based optimization during training (starting from κ_init ≈ 1.83). The learned κ value represents a data-driven choice of risk aversion, removing the need for manual tuning or grid search.
+The SPO models learn κ through gradient-based optimization during training (starting from κ_init ≈ 1.83). The learned κ value represents a data-driven choice of risk aversion, removing the need for manual tuning or grid search.
 
-**Training Configuration**: epochs=15, lr=1e-3 per rolling window. Initial κ is randomly sampled from uniform(0.01, 2.0) and stored in `kappa_init` attribute. Notebooks display change tracking (Δ and % change from initial κ).
+**Training Configuration**: epochs=10, lr=1e-3, kappa_lr=0.1 per rolling window. Initial κ is randomly sampled from uniform(0.01, 2.0) and stored in `kappa_init` attribute. Notebooks display change tracking (Δ and % change from initial κ).
 
 ### Diversification Constraints
 
@@ -219,14 +219,6 @@ See `references/` directory for full papers:
 - Rolling window backtesting
 - Performance comparison and analysis
 - Documentation and figure extraction
-
-### Recent Updates (January 2025)
-- **Bug Fix**: Resolved cache path collision for `base_mv` models with different `train_kappa` settings. Models now use distinct cache files (`_TrainKappaTrue` / `_TrainKappaFalse`).
-- **Learning Rate**: Increased from `1e-4` to `1e-3` to improve κ learning convergence within rolling windows.
-- **Epochs**: Increased from 5 to 15 per rolling window for meaningful κ learning.
-- **Visualization**: Split cumulative wealth comparison into separate plots for individual commentary.
-- **Kappa Tracking**: Added change tracking (Δ and % change) for learned κ values.
-- **Section 5.1**: Separated kappa sensitivity analysis into independent section (run optionally).
 
 ---
 

@@ -16,9 +16,9 @@ This report presents a validation study comparing **Predict-then-Optimize (PO)**
 |-------|------|---------------|-------------|
 | **EW** | Benchmark | N/A | Equal weight 1/n |
 | **PO-MV** | Predict-then-Optimize | Fixed κ=1.0 | Unconstrained |
-| **PO-MV-Constrained** | Predict-then-Optimize | Fixed κ=1.0 | max_weight=20% |
-| **E2E-MV-Learned** | Smart Predict-then-Optimize | Learnable κ | Unconstrained |
-| **E2E-MV-Constrained** | Smart Predict-then-Optimize | Learnable κ | max_weight=20% |
+| **PO-MV-Constr** | Predict-then-Optimize | Fixed κ=1.0 | max_weight=20% |
+| **SPO-MV** | Smart Predict-then-Optimize | Learnable κ | Unconstrained |
+| **SPO-MV-Constr** | Smart Predict-then-Optimize | Learnable κ | max_weight=20% |
 
 **Status**: Complete (January 2025)
 
@@ -67,16 +67,12 @@ Where:
 
 ### 1. Learnable Risk Aversion Works
 
-The E2E models learn the risk aversion coefficient κ through gradient-based optimization. The learning process starts from a random initialization (κ_init ≈ 1.83) and adapts based on the decision-focused loss.
+The SPO models learn the risk aversion coefficient κ through gradient-based optimization. The learning process starts from a random initialization and adapts based on the decision-focused loss.
 
 **Key Observations**:
 - Decision-focused learning successfully modifies κ during training
 - The learned κ represents a data-driven choice of risk preference
-- Notebooks track κ change (Δ and % change from initial value)
-
-**Note**: Rerun notebooks with epochs=15 and lr=1e-3 to see meaningful κ learning. A cache path bug was fixed to ensure `train_kappa=True` and `train_kappa=False` models use separate cache files.
-
-**Initial κ**: Randomly sampled from uniform(0.01, 2.0) when `train_kappa=True`. The `kappa_init` attribute stores this value for tracking learning progress.
+- Removes the need for manual tuning or grid search
 
 ### 2. Diversification Constraints Are Effective
 
@@ -97,9 +93,9 @@ The E2E models learn the risk aversion coefficient κ through gradient-based opt
 |-------|--------|---------|--------------|
 | EW (Benchmark) | 0.29 | 0.49 | -8.8% |
 | PO-MV | 0.83 | 1.07 | -6.7% |
-| PO-MV-Constrained | 0.85 | 1.94 | -4.7% |
-| E2E-Learned | 0.81 | 0.98 | -8.1% |
-| E2E-Constrained | 0.83 | 1.93 | -4.7% |
+| PO-MV-Constr | 0.85 | 1.94 | -4.7% |
+| SPO-MV | 0.81 | 0.98 | -8.1% |
+| SPO-MV-Constr | 0.83 | 1.93 | -4.7% |
 
 ![Synthetic Data: Cumulative Wealth Comparison](../outputs/figures/synthetic_cumulative_wealth.png)
 *Figure: Cumulative wealth (TRI) comparison across models on synthetic data*
@@ -109,7 +105,7 @@ The E2E models learn the risk aversion coefficient κ through gradient-based opt
 |-------|--------|---------|--------------|
 | EW (Benchmark) | 0.14 | 0.16 | -30.4% |
 | PO-MV | 0.09 | 0.12 | -43.6% |
-| E2E-Constrained | 0.12 | 0.16 | -35.5% |
+| SPO-MV-Constr | 0.12 | 0.16 | -35.5% |
 
 ![Real Data: Cumulative Wealth Comparison](../outputs/figures/real_cumulative_wealth.png)
 *Figure: Cumulative wealth (TRI) comparison across models on real market data*
@@ -145,9 +141,9 @@ The E2E models learn the risk aversion coefficient κ through gradient-based opt
 
 | Investor Profile | Recommended Model | Key Benefit |
 |-----------------|------------------|-------------|
-| **Risk-averse** | PO/E2E-Constrained | Lower drawdowns, better Sortino |
+| **Risk-averse** | PO/SPO-MV-Constr | Lower drawdowns, better Sortino |
 | **Return-focused** | PO-MV | Higher absolute returns |
-| **Diversification-focused** | E2E-Constrained | ~5 effective holdings |
+| **Diversification-focused** | SPO-MV-Constr | ~5 effective holdings |
 | **Benchmark-aware** | EW (on real data) | Competitive, zero turnover |
 
 ---
@@ -190,16 +186,9 @@ The optimization layer uses cvxpylayers to make the MV optimization differentiab
 **Technical validation:**
 - Covariance updates working correctly
 - Diversification constraints enforced
-- Cache path collision fixed (separate files for `train_kappa=True/False`)
 - Cross-validation on synthetic vs real data
 
-**Training configuration:**
-- Epochs per rolling window: 15
-- Learning rate: 1e-3
-- Initial κ: ~1.83 (random initialization)
-
 **Reproducibility:**
-- All code documented in notebooks
 - Seeds specified for synthetic data generation
 - Reference papers included in `references/`
 
@@ -226,7 +215,7 @@ The optimization layer uses cvxpylayers to make the MV optimization differentiab
 
 This validation study demonstrates that:
 
-1. **Decision-focused learning works**: E2E models successfully learn risk aversion parameters
+1. **Decision-focused learning works**: SPO models successfully learn risk aversion parameters
 2. **Diversification constraints are valuable**: Increase holdings from ~1 to ~5 assets with minimal performance loss
 3. **Synthetic validation is essential**: Controlled environment confirms methodology before real data
 4. **Real markets are challenging**: Simple MV optimization has limitations on actual market data

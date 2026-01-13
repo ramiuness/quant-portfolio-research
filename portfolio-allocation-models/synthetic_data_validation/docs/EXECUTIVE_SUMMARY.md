@@ -221,9 +221,22 @@ Omega Ratio achieves the best balance:
 ## Limitations & Next Steps
 
 ### Current Study Limitations
-- **Synthetic data**: Well-behaved, no outliers or regime changes
+
+**Data Constraints:**
+- **Synthetic data only**: Well-behaved, no outliers or regime changes; real markets exhibit fat tails, structural breaks, and crises
+- **30 assets**: Production systems typically handle 100-1000+ assets with sector/factor constraints
+- **No out-of-sample testing**: In-sample optimization only; no holdout period or walk-forward validation
+
+**Missing Production Elements:**
+- **No transaction costs**: Turnover not penalized; net returns would differ significantly for high-turnover strategies
+- **No statistical significance tests**: Missing bootstrap confidence intervals, paired t-tests across strategies
+- **No risk decomposition**: Factor attribution and marginal risk contribution not computed
+- **No stress testing**: Performance under crisis scenarios (2008, 2020) not evaluated
+- **Single optimization period**: No rolling window or regime-adaptive rebalancing
+
+**Model Constraints:**
 - **5 models only**: Phase B will add RCVaR and ROmega (GMM-based)
-- **Single market regime**: Real data has structural breaks and crises
+- **Fixed parameters**: No sensitivity analysis on risk aversion, target returns, or uncertainty set sizes
 
 ### Phase B: Distribution-Based Models
 1. Fit Gaussian Mixture Models (GMM) to synthetic data
@@ -232,10 +245,11 @@ Omega Ratio achieves the best balance:
 4. Analyze whether GMM modeling adds value
 
 ### Future Work
-- Apply validated models to real market data
-- Test across different market regimes (bull, bear, crisis)
-- Out-of-sample performance evaluation
-- Transaction costs and practical implementation
+1. **Real market validation**: Apply to 20+ years of equity data across multiple regimes
+2. **Transaction cost integration**: Turnover penalties, market impact, bid-ask spreads
+3. **Statistical rigor**: Bootstrap confidence intervals, reality check tests (White, 2000)
+4. **Risk attribution**: Factor decomposition, marginal contributions to VaR/CVaR
+5. **Out-of-sample testing**: Rolling window backtests with true holdout periods
 
 ---
 

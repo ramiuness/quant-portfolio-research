@@ -267,17 +267,29 @@ Observation equation: y_t = x_t + ε_t,          ε_t ~ N(0, σ²_ε)
 ## Limitations & Future Work
 
 ### Current Limitations
-- **Two-asset universe**: Limited to TSX + T-Bills (simple case study)
+
+**Scope Constraints:**
+- **Two-asset universe**: Limited to TSX + T-Bills (production systems handle 100-1000+ assets)
 - **Single market**: Canadian market only (not globally validated)
-- **Fixed SSM structure**: AR(1) only (could explore ARMA, regime-switching)
-- **No transaction costs**: Real-world friction not modeled
+- **Data history**: ~10 years (institutional studies typically use 20-30+ years across multiple regimes)
+
+**Missing Production Elements:**
+- **No transaction costs**: Real-world friction not modeled; net returns would differ
+- **Limited statistical rigor**: Basic t-tests only; production requires bootstrap confidence intervals, Diebold-Mariano tests, reality check tests (White, 2000)
+- **No risk decomposition**: Missing factor attribution, marginal risk contribution analysis
+- **Basic stress testing**: Regime analysis limited; comprehensive stress scenarios not implemented
+- **Rolling window only**: No true holdout set or paper trading validation
+
+**Model Constraints:**
+- **Fixed SSM structure**: AR(1) only (could explore ARMA, regime-switching, multivariate)
 
 ### Future Extensions
-1. **Multivariate SSMs**: Joint modeling of multiple assets
-2. **Regime-switching models**: Capture bull/bear market transitions
-3. **Real-time deployment**: Streaming data and live filtering
-4. **Transaction cost integration**: Net performance analysis
-5. **Additional allocation methods**: Risk parity, Black-Litterman, etc.
+1. **Scale to production universe**: 50-100+ assets with sector/factor constraints
+2. **Transaction cost integration**: Turnover penalties, market impact modeling
+3. **Enhanced statistical validation**: Bootstrap, block bootstrap, step-ahead forecasts with proper significance tests
+4. **Risk attribution**: Factor decomposition, marginal contributions to risk
+5. **Regime-switching models**: Capture bull/bear market transitions
+6. **True out-of-sample**: Holdout period + live paper trading validation
 
 ---
 

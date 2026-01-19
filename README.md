@@ -43,13 +43,26 @@ Compares Predict-then-Optimize (PO) vs. Smart Predict-then-Optimize (SPO/Decisio
 
 ---
 
+### 4. ML Factor Investing
+**Status**: Research Complete (January 2025) | Backtesting Pending
+
+Machine learning-driven factor investing using 147 quantitative characteristics and SEC filing text features. Originated from the McGill-FIAM Asset Management Hackathon 2025.
+
+**Models**: LightGBM with purged K-fold CV, Optuna hyperparameter tuning
+
+**Key Finding**: Direct return prediction fails (R² ≈ 0), but fundamental prediction succeeds (R² = 0.43 for gross profit/assets). Predicting fundamentals offers a more tractable pathway to alpha.
+
+→ [Project README](ml-factor-investing/README.md) | [Executive Summary](ml-factor-investing/docs/EXECUTIVE_SUMMARY.md)
+
+---
+
 ## Technical Stack
 
 | Language | Purpose |
 |----------|---------|
 | **Julia** | Portfolio optimization (JuMP, HiGHS/Ipopt) |
 | **R** | State-space modeling (KFAS, pomp), data processing |
-| **Python** | Decision-focused learning (PyTorch, cvxpylayers) |
+| **Python** | Decision-focused learning (PyTorch, cvxpylayers), ML factor models (LightGBM, Optuna) |
 
 ---
 
@@ -57,10 +70,10 @@ Compares Predict-then-Optimize (PO) vs. Smart Predict-then-Optimize (SPO/Decisio
 
 These are research studies with educational scope. Key limitations across all projects:
 
-- **Asset universe**: 2-30 assets (production systems handle 100-1000+)
-- **Data history**: ~10 years (institutional studies use 20-30+)
-- **No transaction costs**: Net returns would differ
-- **Rolling window only**: No true holdout validation
+- **Asset universe**: 2-30 assets for optimization studies; ~2,000 for ML factor research (production systems handle 1000+)
+- **Data history**: 10-20 years (institutional studies use 20-30+)
+- **No transaction costs**: Net returns would differ significantly
+- **Limited holdout validation**: Primarily rolling window CV; ml-factor-investing lacks full backtest
 - **Limited statistical rigor**: Basic tests only (production requires bootstrap CI, Diebold-Mariano tests)
 - **No risk decomposition**: Factor attribution not implemented
 - **No stress testing**: Crisis scenario analysis limited
@@ -83,6 +96,7 @@ quant-portfolio-research/
 │   └── synthetic_data_validation/
 ├── state-space-modeling/              # SSM filtering for allocation
 ├── integrated-learning-optimization-portfolio-allocation/  # SPO vs PO
+├── ml-factor-investing/               # ML factor models (Hackathon 2025)
 └── docs/                              # Cross-project documentation
 ```
 

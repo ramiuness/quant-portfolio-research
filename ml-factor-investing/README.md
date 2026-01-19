@@ -2,6 +2,8 @@
 
 Machine learning-driven factor investing research: predicting stock fundamentals and returns using 147 quantitative characteristics and SEC filing text features.
 
+> **Note on Scope**: This project uses factor characteristics from the asset pricing literature as ML features to predict returns and fundamentals. It is more accurately described as *factor-based ML prediction* rather than traditional *factor investing* (which implies constructing and backtesting factor-tilted portfolios). The backtesting phase—which would validate actual investment performance—remains incomplete. The name reflects the project's aspirational goal and its grounding in factor investing research.
+
 ## Origin
 
 This project originated from the **McGill-FIAM Asset Management Hackathon 2025**, where the challenge was to design and test an ML-driven investment strategy leveraging quantitative factors and text data from SEC filings to construct a profitable global equity long-short portfolio.

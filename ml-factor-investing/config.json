@@ -1,0 +1,106 @@
+{
+  "data": {
+    "panel_path": "data/processed/panel.csv",
+    "date_col": "date",
+    "id_col": "tic",
+    "target_col": "target_exret",
+    "features": [
+      "size",
+      "bm",
+      "mom_12m",
+      "ivol_1m",
+      "turnover_1m"
+    ]
+  },
+  "prep": {
+    "impute": false,
+    "winsor_features": [
+      0.05,
+      0.95
+    ],
+    "winsor_target": [
+      0.1,
+      0.9
+    ],
+    "scaling": "zscore",
+    "rank_scale": [
+      -1.0,
+      1.0
+    ],
+    "demean_target": false
+  },
+  "cv": {
+    "outer": {
+      "train_years_start": 8,
+      "val_years": 1,
+      "test_years": 1,
+      "step_months": 12,
+      "purge_outer": true,
+      "purge_horizon_months": 1
+    },
+    "inner": {
+      "n_splits": 3,
+      "purge_horizon_months": 1,
+      "embargo_months": 1
+    }
+  },
+  "models": [
+    {
+      "name": "ridge",
+      "params": {
+        "alpha_grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "fit_intercept": false
+      },
+      "demean_target": false
+    },
+    {
+      "name": "lightgbm",
+      "params": {
+        "param_grid": {
+          "learning_rate": [
+            0.05
+          ],
+          "num_leaves": [
+            31
+          ],
+          "max_depth": [
+            -1
+          ],
+          "min_data_in_leaf": [
+            20
+          ],
+          "feature_fraction": [
+            1.0
+          ],
+          "bagging_fraction": [
+            1.0
+          ],
+          "bagging_freq": [
+            0
+          ],
+          "lambda_l1": [
+            0.0
+          ],
+          "lambda_l2": [
+            0.0
+          ],
+          "n_estimators": [
+            500
+          ],
+          "early_stopping_rounds": [
+            50
+          ]
+        }
+      },
+      "demean_target": false
+    }
+  ],
+  "output": {
+    "preds_path": "output/preds/preds.csv",
+    "metrics_path": "output/metrics/metrics.json"
+  }
+}

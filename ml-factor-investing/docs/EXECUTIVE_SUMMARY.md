@@ -13,8 +13,56 @@ This research investigates machine learning approaches to stock return predictio
 ### Data Architecture
 - **Panel**: ~2,000 US securities, monthly frequency, 2005-2025
 - **Observations**: 6.4M rows (247K after filtering)
-- **Quantitative Features**: 147 characteristics (Jensen, Kelly, Pedersen 2022)
+- **Quantitative Features**: 8 core predictors (shortlisted from 147 characteristics)
 - **Text Features**: SEC EDGAR 10-K/10-Q filings (Risk Factors, MD&A)
+
+### Feature Selection (Literature-Based)
+
+The original 147 characteristics from Jensen, Kelly & Pedersen (2022) were shortlisted based on empirical predictive power from:
+- Gu, Kelly & Xiu (2020) - Feature importance rankings
+- Green, Hand & Zhang (2017) - 90 stock characteristics
+- Goyenko & Zhang (2022) - OOS predictive rankings
+
+**Shortlisting Pipeline**: 147 → 26 → 8 factors
+
+| Stage | Source | Result |
+|-------|--------|--------|
+| Full universe | JKP (2022) | 147 factors |
+| Literature shortlist | GKX + GHZ harvesting | 26 factors |
+| Final predictive core | GZ (2022) empirical ranking | 8 factors |
+
+**Final 8 Predictive Factors**:
+
+| Factor | Category | Ranking | Source |
+|--------|----------|---------|--------|
+| `dolvol_126d` | Liquidity | High | Brennan, Chordia & Subrahmanyam (1998) |
+| `turnover_126d` | Liquidity | High | Datar, Naik & Radcliffe (1998) |
+| `market_equity` | Size | High | Banz (1981) |
+| `rvol_21d` | Risk | High | GKX (2020) |
+| `ni_ivol` | Risk | Medium | Ang et al. (2006) |
+| `beta_60m` | Risk | Medium | Fama & MacBeth (1973) |
+| `z_score` | Distress | Low | Dichev (1998) |
+| `f_score` | Quality | Low | Piotroski (2000) |
+
+**18 Factors Excluded** (from 26 shortlist):
+- **Momentum family** (6): Weak post-2003, option signals dominate
+- **Redundant liquidity** (4): Covered by turnover/dollar volume
+- **Valuation ratios** (3): Weak OOS predictive power
+- **Other** (5): Not robust in GKX/GZ testing
+
+### Option Characteristics (Excluded)
+
+Goyenko & Zhang (2022) documented 16 option-based predictors with **high predictive power**:
+
+| Factor | Description | Ranking |
+|--------|-------------|---------|
+| `opt_baspread` | Option bid-ask spread | **High** |
+| `os` | Option-to-stock volume ratio | **High** |
+| `skewness` | Volatility skew (smirk) | **High** |
+| `hviv` | Historical vol - Implied vol spread | Medium |
+| `cvol`, `pvol` | Change in call/put IV | Medium |
+
+**Exclusion Reason**: Lack of access to OptionMetrics and WRDS databases. The literature suggests option factors dominate stock factors post-2003, making this a significant limitation.
 
 ### Machine Learning Pipeline
 - **Model**: LightGBM gradient boosting
@@ -142,6 +190,7 @@ Folds:   5 contiguous time blocks
 ## Limitations
 
 ### Data Constraints
+- **No option data**: OptionMetrics and WRDS access unavailable; option factors (which dominate post-2003 per GZ 2022) excluded
 - **Single market**: US equities only
 - **Text coverage**: Only 0.1% of rows have complete text features
 - **No transaction costs**: Turnover not penalized
@@ -166,9 +215,10 @@ Folds:   5 contiguous time blocks
 
 ### For Future Work
 1. Complete backtesting with Sharpe ratio and alpha metrics
-2. Expand text feature coverage via alternative NLP pipelines
-3. Test neural network architectures (transformers, LSTMs)
-4. Add transaction cost modeling
+2. **Acquire option data** (OptionMetrics/WRDS) to include high-ranking option factors
+3. Expand text feature coverage via alternative NLP pipelines
+4. Test neural network architectures (transformers, LSTMs)
+5. Add transaction cost modeling
 
 ---
 

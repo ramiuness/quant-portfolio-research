@@ -1,8 +1,4 @@
-# ML Factor Investing
-
-Machine learning-driven factor investing research: predicting stock fundamentals and returns using 147 quantitative characteristics and SEC filing text features.
-
-> **Note on Scope**: This project uses factor characteristics from the asset pricing literature as ML features to predict returns and fundamentals. It is more accurately described as *factor-based ML prediction* rather than traditional *factor investing* (which implies constructing and backtesting factor-tilted portfolios). The backtesting phase—which would validate actual investment performance—remains incomplete. The name reflects the project's aspirational goal and its grounding in factor investing research.
+# Measuring Asset Risk Premium
 
 ## Origin
 
@@ -48,7 +44,7 @@ Predicting accounting fundamentals (gross profit, operating cash flow) is signif
 ## Project Structure
 
 ```
-ml-factor-investing/
+measuring-asset-risk-premium/
 ├── docs/
 │   └── EXECUTIVE_SUMMARY.md      # Detailed findings and recommendations
 ├── src/
@@ -63,8 +59,7 @@ ml-factor-investing/
 │   ├── 02_eda_features/          # EDA, text exploration, feature engineering
 │   ├── 03_modeling/              # Baseline, classification, regression, tuning
 │   ├── 04_backtesting/           # Strategy backtesting
-│   ├── 05_reports/               # Data quality reports
-│   └── 06_advanced/              # End-to-end decision systems
+│   └── 05_reports/               # Data quality reports
 ├── outputs/
 │   └── figures/                  # Visualizations
 ├── data/                         # Data directory (git-ignored)
@@ -82,7 +77,6 @@ ml-factor-investing/
 | **03_modeling** | 5 | Baseline pipeline, classification, regression tuning, accounting ratios |
 | **04_backtesting** | 1 | Strategy backtesting framework |
 | **05_reports** | 2 | Data quality dashboards |
-| **06_advanced** | 1 | End-to-end PyTorch decision system |
 
 ## Technical Highlights
 

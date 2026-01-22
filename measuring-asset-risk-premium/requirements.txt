@@ -31,7 +31,3 @@ ipywidgets>=8.1.0
 # Utilities
 tqdm>=4.66.0
 python-dateutil>=2.8.2
-
-# Optional: For advanced features
-# torch>=2.0.0  # Uncomment if using PyTorch-based models
-# transformers>=4.30.0  # Uncomment if using HuggingFace models

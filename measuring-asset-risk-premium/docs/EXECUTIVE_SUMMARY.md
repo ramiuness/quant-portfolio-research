@@ -1,4 +1,4 @@
-# Executive Summary: ML Factor Investing
+# Executive Summary: Measuring Asset Risk Premium
 
 ## Study Overview
 
@@ -237,12 +237,12 @@ Folds:   5 contiguous time blocks
 
 ## Conclusion
 
-This study demonstrates that while direct stock return prediction remains intractable (R² ≈ 0), predicting accounting fundamentals offers a viable alternative (R² = 0.43). The sector-neutral screening pipeline and purged cross-validation methodology provide a rigorous foundation for factor-based investing research.
+This study demonstrates that while direct stock return prediction remains intractable (R² ≈ 0), predicting accounting fundamentals offers a viable alternative (R² = 0.43). The sector-neutral screening pipeline and purged cross-validation methodology provide a rigorous foundation for measuring asset risk premium.
 
 **Bottom Line**: Focus on what ML *can* predict (fundamentals) rather than what it *can't* (returns directly).
 
 ---
 
-**Project**: ML Factor Investing
+**Project**: Measuring Asset Risk Premium
 **Origin**: McGill-FIAM Asset Management Hackathon 2025
 **Status**: Research complete, backtesting pending

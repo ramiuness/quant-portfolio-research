@@ -38,23 +38,33 @@ This project validates **5 portfolio optimization models** on controlled synthet
 
 ## Key Findings at a Glance
 
-### 🏆 Performance Winner: **Omega Ratio**
-- Annualized Sharpe: **1.32** (highest)
-- Information Ratio: **0.78** (only model beating benchmark)
-- Optimal balance of risk-adjusted returns
+### 🎯 Key Milestone: All Models Beat Benchmark
+With quintile-based target selection, **all 5 models achieve positive Information Ratio**.
+
+| Model | Sharpe (Before) | Sharpe (After) | Improvement |
+|-------|-----------------|----------------|-------------|
+| CVaR  | 1.16            | 1.32           | +14%        |
+| MV    | 1.03            | 1.24           | +20%        |
+| MVBU  | 1.03            | 1.24           | +20%        |
+| Omega | 1.31            | 1.31           | (tau=0)     |
+| MVEU  | 1.06            | 1.08           | +2%         |
+
+### 🏆 Performance Winners: **CVaR and Omega**
+- CVaR: Sharpe **1.32**, IR 0.80
+- Omega: Sharpe **1.31**, IR 0.86 (highest)
 
 ### 📈 Diversification Champion: **MVEU**
 - Capacity: **28.33 effective bets** (9x more than classical models)
 - Invests in all 30 stocks
-- Ideal for high AUM/institutional strategies
+- Now beats benchmark with quintile targets + alpha search
 
-### 🎯 Strategic Recommendations
+### 🎯 Model Selection
 
 | Investment Goal | Recommended Model | Key Metric |
 |----------------|------------------|-----------|
-| **Maximum Performance** | Omega | Sharpe: 1.32 |
+| **Best Risk-Adjusted** | CVaR or Omega | Sharpe: 1.32 / 1.31 |
 | **Scalability (High AUM)** | MVEU | Capacity: 28.33 |
-| **Tail-Risk Protection** | CVaR | Annualized Vol: 12.7% |
+| **Tail-Risk Protection** | CVaR | Lowest volatility |
 
 ---
 
@@ -69,11 +79,13 @@ synthetic_data_validation/
 │   ├── adaptive_optimization.jl # Adaptive target/threshold system
 │   ├── compute_metrics.jl       # Performance metrics computation
 │   ├── visualize_themes.jl      # Visualization functions
+│   ├── denoise_covariance.jl    # RMT covariance denoising
 │   └── robustOptimization.jl    # Core optimization models
 │
 ├── tests/                       # Test suite
 │   ├── test_adaptive_targets.jl
 │   ├── test_annualization_fix.jl
+│   ├── test_denoise_covariance.jl # Covariance denoising tests
 │   └── test_task*.jl           # Task-specific tests
 │
 ├── outputs/                     # Analysis results
@@ -105,7 +117,7 @@ The analysis is organized into **4 thematic questions**:
 **Question**: How do models perform on synthetic data?
 - Sharpe, Information, and Sortino ratios
 - Cumulative PnL analysis
-- **Winner**: Omega (Sharpe: 1.32)
+- **Winner**: CVaR (Sharpe: 1.32), Omega close second (1.31)
 
 ### Theme 2: Diversification & Capacity
 **Question**: How concentrated are portfolios and what's the investment capacity?
@@ -116,14 +128,14 @@ The analysis is organized into **4 thematic questions**:
 ### Theme 3: Classical vs Robust Approaches
 **Question**: How does robustness change portfolio characteristics?
 - Mean-Variance family comparison (MV, MVBU, MVEU)
-- Performance vs. diversification trade-offs
-- **Insight**: Ellipsoid uncertainty trades 5% IR for 9x capacity
+- MV ≈ MVBU on synthetic data
+- **Insight**: MVEU provides 9x capacity while still beating benchmark (with quintile targets)
 
 ### Theme 4: Risk-Return Trade-offs
 **Question**: What relationships exist between risk, return, and diversification?
 - Efficient frontier patterns
 - Capacity vs. performance analysis
-- **Optimal balance**: Omega (best Sharpe + reasonable capacity)
+- **Finding**: All models beat benchmark with proper target tuning
 
 ---
 
@@ -137,16 +149,23 @@ The analysis is organized into **4 thematic questions**:
 
 ### Validation
 - ✅ All models pass technical constraints
-- ✅ Adaptive target/threshold adjustment system
+- ✅ Quintile-based target selection (Q80 → Q60 → Q40 → Q20)
+- ✅ MVEU alpha search for optimal uncertainty set size
 - ✅ Solver convergence verification
 - ✅ Weight sum and non-negativity checks
+
+### Target Selection Strategy
+- **MV, CVaR, MVBU, MVEU**: Search targets at quintiles of mean asset returns, use highest feasible
+- **Omega**: Fixed tau=0 (economically meaningful threshold)
+- **MVEU**: Additional alpha search [0.50, 0.70, 0.85, 0.95, 0.99] for best Sharpe
 
 ### Metrics
 - **Return**: Mean return, cumulative PnL
 - **Risk**: Volatility, CVaR, downside deviation
 - **Risk-Adjusted**: Sharpe, Sortino, Information Ratio, Omega Ratio
 - **Portfolio Characteristics**: Diversification, capacity (1/HHI), max weight
-- **Reporting**: All metrics in both daily and annualized formats (252 trading days)
+- **Baseline**: Equally-Weighted (EW) portfolio for benchmark comparisons
+- **Reporting**: Annualized format (252 trading days)
 
 ---
 
@@ -195,15 +214,11 @@ See [outputs/reports/REPORT_README.md](outputs/reports/REPORT_README.md) for det
 - **Benefit**: Robust, publication-ready results with proper validation
 - **Documentation**: [docs/ADAPTIVE_TARGETS_README.md](docs/ADAPTIVE_TARGETS_README.md)
 
-### 2. Comprehensive Metrics Framework
-- Unified computation across all models
-- Both daily and annualized reporting
-- Portfolio characteristics and risk-adjusted performance
-
-### 3. Thematic Analysis Structure
-- Organized by research questions
-- Clear findings for each theme
-- Visual and tabular presentations
+### 2. Covariance Denoising (RMT)
+- **Method**: Marcenko-Pastur random matrix theory (López de Prado)
+- **Purpose**: Separate signal from noise in sample covariance eigenvalues
+- **Implementation**: Constant residual, targeted shrinkage, detoning methods
+- **Benefit**: Improved portfolio stability and condition number
 
 ---
 
@@ -229,22 +244,8 @@ See [outputs/reports/REPORT_README.md](outputs/reports/REPORT_README.md) for det
 
 ## Citation
 
-If you use this code or methodology in your research, please cite:
-
 ```
 Portfolio Optimization Models: Synthetic Data Validation
 Validation framework for classical and robust portfolio optimization approaches
-2025
+2026
 ```
-
----
-
-## License
-
-This project is for research and educational purposes.
-
----
-
-## Contact
-
-For questions or feedback, please open an issue in the repository.

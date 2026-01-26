@@ -132,6 +132,27 @@ With quintile targets, all models achieve positive IR (vs. only Omega before tun
 
 ---
 
+### Theme 5: Covariance Denoising (Raw vs Denoised)
+**Research Question**: Does Marcenko-Pastur denoising improve portfolio optimization?
+
+#### Minimal Impact on Synthetic Data
+Since synthetic returns are generated from a known multivariate distribution, the sample covariance already captures the true structure with minimal estimation noise.
+
+| Model | Sharpe Change | Note |
+|-------|---------------|------|
+| MV    | +0.8%         | Slight improvement |
+| MVBU  | +1.3%         | Slight improvement |
+| MVEU  | 0.0%          | No change |
+| CVaR  | 0.0%          | Uses returns directly |
+| Omega | 0.0%          | Uses returns directly |
+
+- **Condition number**: Improved 1.24x (103.7 → 83.8)
+- **Signal eigenvalues**: 3 of 30 (56.4% variance explained)
+
+**Implication**: Denoising has greater impact on noisy real-world data than on well-behaved synthetic data.
+
+---
+
 ## Strategic Recommendations
 
 ### Investment Decision Framework
